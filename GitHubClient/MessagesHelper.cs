@@ -6,7 +6,7 @@
     public static class MessagesHelper
     {
         /// <summary>
-        /// Message if operation successful
+        /// Message if operation successful.
         /// </summary>
         public const string StandartSuccessMessage = "Operation end with success.";
 

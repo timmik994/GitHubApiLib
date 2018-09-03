@@ -61,7 +61,7 @@
         {
             var url = $"/{UrlConstants.CurrentUserUrlPart}/{UrlConstants.RepositoriesUrlPart}";
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            var clientresponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
+            var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
             return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse, 
                 MessagesHelper.StandartNotFoundMessage);
@@ -76,7 +76,7 @@
         {
             var url = $"/{UrlConstants.RepositoriesUrlPart}/{repositoryData.Owner.Login}/{repositoryData.Name}";
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            var clientresponse = new ClientResponse<FullRepositoryData>();
+            var clientResponse = new ClientResponse<FullRepositoryData>();
             string notFoundMessage =
                 MessagesHelper.GenerateUserOrRepositoryNotFoundMessage(
                     repositoryData.Owner.Login, 

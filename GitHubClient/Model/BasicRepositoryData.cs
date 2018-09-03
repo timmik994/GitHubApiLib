@@ -3,7 +3,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Git repository.
+    /// Basic data of gitHub repository.
     /// </summary>
     public class BasicRepositoryData
     {

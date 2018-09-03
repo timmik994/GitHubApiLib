@@ -11,7 +11,7 @@
     public class UserService : IUserService
     {
         /// <summary>
-        /// Owner of access token 
+        /// Owner of access token.
         /// </summary>
         private FullUserData currentUser;
 

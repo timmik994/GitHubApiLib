@@ -3,7 +3,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// License data.
+    /// Repository license data.
     /// </summary>
     public class License
     {

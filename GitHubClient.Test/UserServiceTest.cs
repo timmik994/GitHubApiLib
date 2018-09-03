@@ -25,7 +25,7 @@
         [Fact]
         public void TestGetCurrentUserSecondTime()
         {
-            HttpResponseMessage testResponse = this.GenerateSuccessfulresponseMessage();
+            HttpResponseMessage testResponse = this.GenerateSuccessfulResponseMessage();
             FullUserData testUserObject = this.GenerateTestUser();
             ClientResponse<FullUserData> mockResponse = new ClientResponse<FullUserData>()
             {
@@ -60,7 +60,7 @@
         [Fact]
         public void TestGetUserDataIfParameterNull()
         {
-            var httpresponse = new HttpResponseMessage(HttpStatusCode.NotFound);
+            var httpResponse = new HttpResponseMessage(HttpStatusCode.NotFound);
             var mock = new Mock<IRequestSender>();
             UserService userService = new UserService(mock.Object);
             ClientResponse<FullUserData> testClientResponse = 
@@ -123,7 +123,7 @@
         /// Generates successful HTTP response.
         /// </summary>
         /// <returns>HTTP response with status OK.</returns>
-        private HttpResponseMessage GenerateSuccessfulresponseMessage()
+        private HttpResponseMessage GenerateSuccessfulResponseMessage()
         {
             FullUserData testUser = this.GenerateTestUser();
             string jsonString = this.GenerateUserJson(testUser);

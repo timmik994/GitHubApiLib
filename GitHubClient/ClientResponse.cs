@@ -3,7 +3,7 @@
     /// <summary>
     /// Response object from library.
     /// </summary>
-    /// <typeparam name="T">Type of data in response</typeparam>
+    /// <typeparam name="T">Type of data in response.</typeparam>
     public class ClientResponse<T>
     {
         /// <summary>

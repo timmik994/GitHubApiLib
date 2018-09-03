@@ -20,7 +20,7 @@
         [Fact]
         public void TestNullDataInRepositoryCreation()
         {
-            var httpresponse = new HttpResponseMessage(HttpStatusCode.Created);
+            var httpResponse = new HttpResponseMessage(HttpStatusCode.Created);
             var mock = new Mock<IRequestSender>();
             var url = $"/{UrlConstants.UsersUrlPart}/{UrlConstants.RepositoriesUrlPart}";
             var mockResponse = new ClientResponse<string>()
@@ -30,9 +30,9 @@
             };
 
             mock.Setup(sender => sender.SendGetRequestToGitHubApiAsync(url))
-                .ReturnsAsync(httpresponse);
+                .ReturnsAsync(httpResponse);
             mock.Setup(sender =>
-                    sender.ProcessHttpResponse<string>(httpresponse, MessagesHelper.StandartNotFoundMessage))
+                    sender.ProcessHttpResponse<string>(httpResponse, MessagesHelper.StandartNotFoundMessage))
                 .ReturnsAsync(mockResponse);
             RepositoryService repoService = new RepositoryService(mock.Object);
             ClientResponse<string> testResponse = repoService.CreateRepository(null).GetAwaiter().GetResult();
