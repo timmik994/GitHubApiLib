@@ -10,8 +10,8 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateRepositoryModel" /> class.
         /// </summary>
-        /// <param name="name">The name of the repository.</param>
-        /// <param name="description">The description of new repository.</param>
+        /// <param name="name">Name of the repository.</param>
+        /// <param name="description">Description of new repository.</param>
         public CreateRepositoryModel(string name, string description)
         {
             this.Name = name;

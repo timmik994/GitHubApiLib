@@ -1,12 +1,10 @@
 ﻿namespace GitHubClient.DataServices
 {
     using System.Collections.Generic;
-    using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using GitHubClient.Interfaces;
     using GitHubClient.Model;
-    using Newtonsoft.Json;
 
     /// <summary>
     /// Service that works with branch data.
@@ -14,7 +12,7 @@
     public class BranchService : IBranchService
     {
         /// <summary>
-        /// Instance of requsetSender to send requsets to gitHub api.
+        /// Instance of requsetSender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
@@ -45,7 +43,8 @@
                 return clientResponse;
             }
 
-            var url = $"/{UrlConstants.RepositoriesUrlPart}/{username}/{repositoryName}/{UrlConstants.BranchesUrlPart}";
+            var url = 
+                $"/{UrlConstants.RepositoriesUrlPart}/{username}/{repositoryName}/{UrlConstants.BranchesUrlPart}";
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<Branch>>(
                 httpResponse, 

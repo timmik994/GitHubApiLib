@@ -24,7 +24,10 @@
         /// <param name="repositoryName">The repository name.</param>
         /// <param name="branchName">The branch name.</param>
         /// <returns>ClientResponse instance with collections of commits.</returns>
-        Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(string username, string repositoryName, string branchName);
+        Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(
+            string username, 
+            string repositoryName, 
+            string branchName);
 
         /// <summary>
         /// Get commits from specified repository.
@@ -45,7 +48,7 @@
         /// Get Full commit data based on basic commit data.
         /// </summary>
         /// <param name="basicCommitData">The basic data of the commit.</param>
-        /// <returns>ClientResponse with full data of the commit.</returns>
+        /// <returns>ClientResponse instance with full data of the commit.</returns>
         Task<ClientResponse<Commit>> GetCommitData(BasicCommitData basicCommitData);
     }
 }

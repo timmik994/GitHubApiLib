@@ -61,7 +61,7 @@
         }
 
         /// <summary>
-        /// Tests GetRepositoryCommits if has empty param.
+        /// Tests GetRepositoryCommits if one of the parameters is empty.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <param name="repositoryName">The name of repository.</param>

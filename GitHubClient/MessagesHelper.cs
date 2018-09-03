@@ -6,14 +6,14 @@
     public static class MessagesHelper
     {
         /// <summary>
-        /// Message if operation successfull
+        /// Message if operation successful
         /// </summary>
-        public const string StandartSuccessMessage = "Operation end with success";
+        public const string StandartSuccessMessage = "Operation end with success.";
 
         /// <summary>
         /// Message is data loaded from local source.
         /// </summary>
-        public const string DataAlreadyLoadedMessage = "Data already loaded from gitHub";
+        public const string DataAlreadyLoadedMessage = "Data already loaded from gitHub.";
 
         /// <summary>
         /// Message if unauthorized status code.
@@ -23,7 +23,7 @@
         /// <summary>
         /// Message if unknown error.
         /// </summary>
-        public const string UnknownErrorMessage = "Operation ended with unknown error";
+        public const string UnknownErrorMessage = "Operation ended with unknown error.";
 
         /// <summary>
         /// Message if object is null or has empty field.
@@ -33,21 +33,21 @@
         /// <summary>
         /// Message if json string has incorrect json format.
         /// </summary>
-        public const string InvalidJsonMessage = "Json object from server has invalid format";
+        public const string InvalidJsonMessage = "Json object from server has invalid format.";
 
         /// <summary>
-        /// Standart message for NotFound status.
+        /// Standard message for NotFound status.
         /// </summary>
         public const string StandartNotFoundMessage = "Requested data not found.";
 
         /// <summary>
-        /// Mesage if user not found.
+        /// Message if user not found.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns>The client message.</returns>
         public static string GenerateUserNotFoundMessage(string username)
         {
-            return $"User {username} Not found";
+            return $"User {username} Not found.";
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <returns>The client message.</returns>
         public static string GenerateUserOrRepositoryNotFoundMessage(string username, string repoName)
         {
-            return $"User {username} or repository {repoName} not found";
+            return $"User {username} or repository {repoName} not found.";
         }
 
         /// <summary>
@@ -70,7 +70,7 @@
         /// <returns>The client message.</returns>
         public static string GenerateRepoUserBranchNotFoundMessage(string username, string repoName, string branchName)
         {
-            return $"User {username} or repository {repoName} or branch {branchName} not found";
+            return $"User {username} or repository {repoName} or branch {branchName} not found.";
         }
     }
 }

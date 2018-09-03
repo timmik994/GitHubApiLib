@@ -22,7 +22,7 @@
         public string Company { get; set; }
 
         /// <summary>
-        /// Gets or sets the location of the user.
+        /// Gets or sets location of the user.
         /// </summary>
         [JsonProperty("location")]
         public string Location { get; set; }
@@ -58,7 +58,7 @@
         public int FolloversCount { get; set; }
 
         /// <summary>
-        /// Gets or sets user folloving count.
+        /// Gets or sets user following count.
         /// </summary>
         [JsonProperty("following")]
         public int FollowingCount { get; set; }

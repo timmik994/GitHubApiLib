@@ -11,12 +11,12 @@
     public class UserService : IUserService
     {
         /// <summary>
-        /// Owner of accesss token 
+        /// Owner of access token 
         /// </summary>
         private FullUserData currentUser;
 
         /// <summary>
-        /// Instance of requsetSender to send requsets to gitHub api.
+        /// Instance of requsetSender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
@@ -48,8 +48,11 @@
             else
             {
                 var url = $"/{UrlConstants.CurrentUserUrlPart}";
-                HttpResponseMessage httpresponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-                ClientResponse<FullUserData> clientResponse = await this.requestSender.ProcessHttpResponse<FullUserData>(httpresponse, MessagesHelper.StandartNotFoundMessage);
+                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                ClientResponse<FullUserData> clientResponse = 
+                    await this.requestSender.ProcessHttpResponse<FullUserData>(
+                        httpResponse, 
+                        MessagesHelper.StandartNotFoundMessage);
                 this.currentUser = clientResponse.ResponseData;
                 return clientResponse;
             }
@@ -72,7 +75,9 @@
 
             var url = $"/{UrlConstants.UsersUrlPart}/{username}";
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            return await this.requestSender.ProcessHttpResponse<FullUserData>(httpResponse, MessagesHelper.GenerateUserNotFoundMessage(username));
+            return await this.requestSender.ProcessHttpResponse<FullUserData>(
+                httpResponse, 
+                MessagesHelper.GenerateUserNotFoundMessage(username));
         }
 
         /// <summary>

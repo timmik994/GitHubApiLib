@@ -12,7 +12,7 @@
     public class CommitService : ICommitService
     {
         /// <summary>
-        /// Instance of requsetSender to send requsets to gitHub api.
+        /// Instance of requsetSender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
@@ -31,7 +31,9 @@
         /// <param name="repository">The repository data.</param>
         /// <param name="branch">The branch data.</param>
         /// <returns>ClientResponse instance with collections of commits.</returns>
-        public async Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(BasicRepositoryData repository, Branch branch)
+        public async Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(
+            BasicRepositoryData repository, 
+            Branch branch)
         {
             if (repository == null || branch == null)
             {
@@ -53,7 +55,10 @@
         /// <param name="repositoryName">The repository name.</param>
         /// <param name="branchName">The branch name.</param>
         /// <returns>ClientResponse instance with collections of commits.</returns>
-        public async Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(string username, string repositoryName, string branchName)
+        public async Task<ClientResponse<IEnumerable<Commit>>> GetBranchCommits(
+            string username, 
+            string repositoryName, 
+            string branchName)
         {
             if (username == string.Empty || repositoryName == string.Empty || branchName == string.Empty)
             {
@@ -90,8 +95,11 @@
                 return clientResponse;
             }
 
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
-            return await this.requestSender.ProcessHttpResponse<Commit>(httpResponse, MessagesHelper.StandartNotFoundMessage);
+            HttpResponseMessage httpResponse = 
+                await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
+            return await this.requestSender.ProcessHttpResponse<Commit>(
+                httpResponse, 
+                MessagesHelper.StandartNotFoundMessage);
         }
 
         /// <summary>
@@ -100,7 +108,9 @@
         /// <param name="username">The username.</param>
         /// <param name="repositoryName">The name of the repository.</param>
         /// <returns>ClientResponse instance with collections of commits.</returns>
-        public async Task<ClientResponse<IEnumerable<Commit>>> GetRepositoryCommits(string username, string repositoryName)
+        public async Task<ClientResponse<IEnumerable<Commit>>> GetRepositoryCommits(
+            string username, 
+            string repositoryName)
         {
             if (username == string.Empty || repositoryName == string.Empty)
             {

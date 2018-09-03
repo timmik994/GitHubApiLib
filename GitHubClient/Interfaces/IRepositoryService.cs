@@ -13,20 +13,20 @@
         /// Gets repositories of specified user.
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <returns>with with collection of repositories of specified user.</returns>
+        /// <returns>ClientResponse instance with collection of repositories of specified user.</returns>
         Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetUserRepositories(string username);
 
         /// <summary>
         /// Gets repositories of specified user.
         /// </summary>
         /// <param name="userData">The basic data of the user.</param>
-        /// <returns>ClientResponse instance with cllection of repositories of specified user.</returns>
+        /// <returns>ClientResponse instance with collection of repositories of specified user.</returns>
         Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetUserRepositories(BasicUserData userData);
 
         /// <summary>
         /// Gets full data of repository.
         /// </summary>
-        /// <param name="repositoryData">Basic repository data.</param>
+        /// <param name="repositoryData">The basic repository data.</param>
         /// <returns>ClientResponse instance with full data of repository.</returns>
         Task<ClientResponse<FullRepositoryData>> GetFullRepositoryData(BasicRepositoryData repositoryData);
 
@@ -39,7 +39,7 @@
         /// <summary>
         /// Creates repository on gitHub.
         /// </summary>
-        /// <param name="repositoryData">Data of new repository.</param>
+        /// <param name="repositoryData">The data of new repository.</param>
         /// <returns>Client response with operation status.</returns>
         Task<ClientResponse<string>> CreateRepository(CreateRepositoryModel repositoryData);
     }

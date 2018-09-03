@@ -1,7 +1,7 @@
 ﻿namespace GitHubClient
 {
     /// <summary>
-    /// Parts of URLs to gitHub api.
+    /// Parts of URLs to gitHub API.
     /// </summary>
     public static class UrlConstants
     {

@@ -13,7 +13,7 @@
     public class BranchesServiceTest
     {
         /// <summary>
-        /// Tests GetBranchesData if repository name is empty.
+        /// Tests GetBranchList if repository name is empty.
         /// </summary>
         [Fact]
         public void TestGetBranchesIfUsernameEmpty()
@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        /// Tests GetBranchesData if username is empty.
+        /// Tests GetBranchList if username is empty.
         /// </summary>
         [Fact]
         public void TestGetBranchesIfrepoNameEmpty()
@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Tests GetBranchesData if repository object is null.
+        /// Tests GetBranchList if repository object is null.
         /// </summary>
         [Fact]
         public void TestGetBranchesNullParam()

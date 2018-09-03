@@ -3,7 +3,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Branch data getted from branch list of git repository.
+    /// Branch data gutted from branch list of git repository.
     /// </summary>
     public class Branch
     {

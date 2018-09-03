@@ -20,12 +20,12 @@
         private const string TestUserLogin = "test";
 
         /// <summary>
-        /// Testa that insecond request returns same user object as in first.
+        /// Tests that is second request returns same user object as in first.
         /// </summary>
         [Fact]
         public void TestGetCurrentUserSecondTime()
         {
-            HttpResponseMessage testResponse = this.GenerateSussessfulresponseMessage();
+            HttpResponseMessage testResponse = this.GenerateSuccessfulresponseMessage();
             FullUserData testUserObject = this.GenerateTestUser();
             ClientResponse<FullUserData> mockResponse = new ClientResponse<FullUserData>()
             {
@@ -41,11 +41,17 @@
                     sender.ProcessHttpResponse<FullUserData>(testResponse, MessagesHelper.StandartNotFoundMessage))
                 .ReturnsAsync(mockResponse);
             UserService userService = new UserService(mock.Object);
-            ClientResponse<FullUserData> testClientResponseFirst = userService.GetCurrentUser().GetAwaiter().GetResult();
-            ClientResponse<FullUserData> testClientResponseSecond = userService.GetCurrentUser().GetAwaiter().GetResult();
+            ClientResponse<FullUserData> testClientResponseFirst = 
+                userService.GetCurrentUser().GetAwaiter().GetResult();
+            ClientResponse<FullUserData> testClientResponseSecond = 
+                userService.GetCurrentUser().GetAwaiter().GetResult();
             Assert.Equal(testClientResponseFirst.ResponseData, testClientResponseSecond.ResponseData);
             Assert.Equal(MessagesHelper.DataAlreadyLoadedMessage, testClientResponseSecond.Message);
-            mock.Verify(sender => sender.ProcessHttpResponse<FullUserData>(testResponse, MessagesHelper.StandartNotFoundMessage), Times.Once);
+            mock.Verify(
+                sender => sender.ProcessHttpResponse<FullUserData>(
+                    testResponse, 
+                    MessagesHelper.StandartNotFoundMessage), 
+                Times.Once);
         }
 
         /// <summary>
@@ -57,7 +63,8 @@
             var httpresponse = new HttpResponseMessage(HttpStatusCode.NotFound);
             var mock = new Mock<IRequestSender>();
             UserService userService = new UserService(mock.Object);
-            ClientResponse<FullUserData> testClientResponse = userService.GetFullUserData((BasicUserData)null).GetAwaiter().GetResult();
+            ClientResponse<FullUserData> testClientResponse = 
+                userService.GetFullUserData((BasicUserData)null).GetAwaiter().GetResult();
             Assert.Equal(OperationStatus.EmptyData, testClientResponse.Status);
             Assert.Equal(MessagesHelper.EmptyDataMessage, testClientResponse.Message);
             Assert.Null(testClientResponse.ResponseData);
@@ -72,7 +79,8 @@
             var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.NotFound);
             var mock = new Mock<IRequestSender>();
             UserService userService = new UserService(mock.Object);
-            ClientResponse<FullUserData> testClientResponse = userService.GetFullUserData(string.Empty).GetAwaiter().GetResult();
+            ClientResponse<FullUserData> testClientResponse = 
+                userService.GetFullUserData(string.Empty).GetAwaiter().GetResult();
             Assert.Equal(OperationStatus.EmptyData, testClientResponse.Status);
             Assert.Equal(MessagesHelper.EmptyDataMessage, testClientResponse.Message);
             Assert.Null(testClientResponse.ResponseData);
@@ -93,9 +101,9 @@
                 Company = "no",
                 FolloversCount = 1,
                 FollowingCount = 2,
-                Location = "russia",
+                Location = "Russia",
                 PublicReposCount = 4,
-                URL = "url",
+                URL = "URL",
                 UpdatedAt = DateTime.Today
             };
             return testUser;
@@ -112,10 +120,10 @@
         }
 
         /// <summary>
-        /// Generates sussessfui http response.
+        /// Generates successful HTTP response.
         /// </summary>
-        /// <returns>Http response with status Ok.</returns>
-        private HttpResponseMessage GenerateSussessfulresponseMessage()
+        /// <returns>HTTP response with status OK.</returns>
+        private HttpResponseMessage GenerateSuccessfulresponseMessage()
         {
             FullUserData testUser = this.GenerateTestUser();
             string jsonString = this.GenerateUserJson(testUser);

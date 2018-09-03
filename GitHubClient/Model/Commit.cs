@@ -16,7 +16,7 @@
         public string Sha { get; set; }
 
         /// <summary>
-        /// Gets or sets the full data about commit.
+        /// Gets or sets full data about commit.
         /// </summary>
         [JsonProperty("commit")]
         public FullCommitData CommitData { get; set; }
@@ -28,13 +28,13 @@
         public BasicUserData CommitAuthor { get; set; }
 
         /// <summary>
-        /// Gets or sets commiter
+        /// Gets or sets committer
         /// </summary>
         [JsonProperty("committer")]
         public BasicUserData CommitCommiter { get; set; }
 
         /// <summary>
-        /// Gets or sets perents of the commit.
+        /// Gets or sets parents of the commit.
         /// </summary>
         [JsonProperty("parents")]
         public IEnumerable<BasicCommitData> Parents { get; set; }

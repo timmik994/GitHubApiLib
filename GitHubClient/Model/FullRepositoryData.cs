@@ -87,9 +87,9 @@
         public bool Archived { get; set; }
 
         /// <summary>
-        /// Gets or sets current user prenissions of this repository.
+        /// Gets or sets current user permissions of this repository.
         /// </summary>
-        [JsonProperty("premissions")]
+        [JsonProperty("permissions")]
         public UserPremissions UserPremissions { get; set; }
 
         /// <summary>

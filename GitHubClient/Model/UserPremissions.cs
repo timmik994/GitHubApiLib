@@ -3,13 +3,13 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// User premissons in repository.
+    /// User permissions in repository.
     /// </summary>
     public class UserPremissions
     {
         /// <summary>
         /// Gets or sets a value indicating whether current user
-        /// has admin privelegies.
+        /// has admin privileges.
         /// </summary>
         [JsonProperty("admin")]
         public bool IsAdmin { get; set; }

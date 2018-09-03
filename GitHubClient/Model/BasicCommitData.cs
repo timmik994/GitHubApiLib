@@ -3,7 +3,7 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// Commit data about sha and url to get this commit.
+    /// Commit data about sha and URL to get this commit.
     /// </summary>
     public class BasicCommitData
     {
@@ -14,7 +14,7 @@
         public string Sha { get; set; }
 
         /// <summary>
-        /// Gets or sets url to get full data of this commit.
+        /// Gets or sets URL to get full data of this commit.
         /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }

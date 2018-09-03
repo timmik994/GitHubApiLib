@@ -26,7 +26,7 @@
         public string Message { get; set; }
 
         /// <summary>
-        /// Gets or sets count of comments on thic commit.
+        /// Gets or sets count of comments on this commit.
         /// </summary>
         [JsonProperty("comment_count")]
         public int CommentsCount { get; set; }

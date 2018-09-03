@@ -1,8 +1,5 @@
 ﻿namespace GitHubClient.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -29,7 +26,7 @@
         public string SpdxId { get; set; }
 
         /// <summary>
-        /// Gets or sets license url.
+        /// Gets or sets license URL.
         /// </summary>
         [JsonProperty("url")]
         public string Url { get; set; }

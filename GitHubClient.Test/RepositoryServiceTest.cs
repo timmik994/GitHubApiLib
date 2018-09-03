@@ -41,7 +41,7 @@
         }
 
         /// <summary>
-        /// Test CreateRepository if Nameof repository is empty.
+        /// Test CreateRepository if Name of repository is empty.
         /// </summary>
         [Fact]
         public void TestEmptyNameInCreation()

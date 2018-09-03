@@ -13,7 +13,7 @@
     public class RepositoryService : IRepositoryService
     {
         /// <summary>
-        /// Instance of requsetSender to send requsets to gitHub api.
+        /// Instance of requsetSender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
@@ -46,8 +46,11 @@
 
             string repositoryJson = JsonConvert.SerializeObject(repositoryData);
             var url = $"/{UrlConstants.UsersUrlPart}/{UrlConstants.RepositoriesUrlPart}";
-            HttpResponseMessage httpresponse = await this.requestSender.SendPostRequestToGitHubApiAsync(url, repositoryJson);
-            return await this.requestSender.ProcessHttpResponse<string>(httpresponse, MessagesHelper.StandartNotFoundMessage);
+            HttpResponseMessage httpResponse = 
+                await this.requestSender.SendPostRequestToGitHubApiAsync(url, repositoryJson);
+            return await this.requestSender.ProcessHttpResponse<string>(
+                httpResponse, 
+                MessagesHelper.StandartNotFoundMessage);
         }
 
         /// <summary>
@@ -57,9 +60,11 @@
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetCurrentUserRepository()
         {
             var url = $"/{UrlConstants.CurrentUserUrlPart}/{UrlConstants.RepositoriesUrlPart}";
-            HttpResponseMessage httpresponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var clientresponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(httpresponse, MessagesHelper.StandartNotFoundMessage);
+            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
+                httpResponse, 
+                MessagesHelper.StandartNotFoundMessage);
         }
 
         /// <summary>
@@ -70,11 +75,15 @@
         public async Task<ClientResponse<FullRepositoryData>> GetFullRepositoryData(BasicRepositoryData repositoryData)
         {
             var url = $"/{UrlConstants.RepositoriesUrlPart}/{repositoryData.Owner.Login}/{repositoryData.Name}";
-            HttpResponseMessage httpresponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var clientresponse = new ClientResponse<FullRepositoryData>();
+            string notFoundMessage =
+                MessagesHelper.GenerateUserOrRepositoryNotFoundMessage(
+                    repositoryData.Owner.Login, 
+                    repositoryData.Name);
             return await this.requestSender.ProcessHttpResponse<FullRepositoryData>(
-                httpresponse, 
-                MessagesHelper.GenerateUserOrRepositoryNotFoundMessage(repositoryData.Owner.Login, repositoryData.Name));
+                httpResponse, 
+                notFoundMessage);
         }
 
         /// <summary>
@@ -95,8 +104,10 @@
             }
 
             var url = $"/{UrlConstants.UsersUrlPart}/{username}/{UrlConstants.RepositoriesUrlPart}";
-            HttpResponseMessage httpresponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(httpresponse, MessagesHelper.GenerateUserNotFoundMessage(username));
+            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
+                httpResponse, 
+                MessagesHelper.GenerateUserNotFoundMessage(username));
         }
 
         /// <summary>

@@ -14,7 +14,7 @@
         public string Login { get; set; }
 
         /// <summary>
-        /// Gets or sets url of user page on github.
+        /// Gets or sets URL of user page on github.
         /// </summary>
         [JsonProperty("url")]
         public string URL { get; set; }
