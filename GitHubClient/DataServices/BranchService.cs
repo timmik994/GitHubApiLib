@@ -1,6 +1,7 @@
 ﻿namespace GitHubClient.DataServices
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
     using GitHubClient.Interfaces;
@@ -19,7 +20,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchService" /> class.
         /// </summary>
-        /// <param name="requestSender">The IRequestSender instance.</param>
+        /// <param name="requestSender">Instance of requsetSender.</param>
         public BranchService(IRequestSender requestSender)
         {
             this.requestSender = requestSender;
@@ -37,24 +38,32 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
             }
 
-            var url = 
-                $"/{UrlConstants.RepositoriesUrlPart}/{username}/{repositoryName}/{UrlConstants.BranchesUrlPart}";
+            var url = string.Format(
+                CultureInfo.InvariantCulture, 
+                UrlConstants.RepositoryBranchesUrlTemplate, 
+                username,
+                repositoryName);
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            string notFoundMessage = string.Format(
+                CultureInfo.InvariantCulture,
+                MessagesConstants.UserOrRepositoryNotFoundMessageTemplate,
+                username,
+                repositoryName);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<Branch>>(
                 httpResponse, 
-                MessagesHelper.GenerateUserOrRepositoryNotFoundMessage(username, repositoryName));
+                notFoundMessage);
         }
 
         /// <summary>
         /// Gets branches list of specified repository.
         /// </summary>
-        /// <param name="repositoryData">The data of repository.</param>
+        /// <param name="repositoryData">The basic data of repository.</param>
         /// <returns>ClientResponse instance with collection of branches.</returns>
         public async Task<ClientResponse<IEnumerable<Branch>>> GetBranchList(BasicRepositoryData repositoryData)
         {
@@ -62,7 +71,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

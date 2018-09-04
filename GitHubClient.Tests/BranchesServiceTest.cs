@@ -22,7 +22,7 @@
             BranchService branchService = new BranchService(mock.Object);
             ClientResponse<IEnumerable<Branch>> testResponse =
                 branchService.GetBranchList(string.Empty, "repoName").GetAwaiter().GetResult();
-            Assert.Equal(MessagesHelper.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -36,7 +36,7 @@
             BranchService branchService = new BranchService(mock.Object);
             ClientResponse<IEnumerable<Branch>> testResponse =
                 branchService.GetBranchList("username", string.Empty).GetAwaiter().GetResult();
-            Assert.Equal(MessagesHelper.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -50,7 +50,7 @@
             BranchService branchService = new BranchService(mock.Object);
             ClientResponse<IEnumerable<Branch>> testResponse =
                 branchService.GetBranchList((BasicRepositoryData)null).GetAwaiter().GetResult();
-            Assert.Equal(MessagesHelper.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
     }

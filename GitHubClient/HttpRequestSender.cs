@@ -1,6 +1,7 @@
 ﻿namespace GitHubClient
 {
     using System;
+    using System.Globalization;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
@@ -35,6 +36,11 @@
         public const string UserAgentHeaderName = "User-Agent";
 
         /// <summary>
+        /// Content type header value for json objects.
+        /// </summary>
+        public const string JsonContentType = "application/json";
+
+        /// <summary>
         /// The access token from gitHub.
         /// </summary>
         private string accessToken;
@@ -56,7 +62,7 @@
         }
 
         /// <summary>
-        /// Method that processes HTTP response that returned some data.
+        /// Processes HTTP response with some json data.
         /// </summary>
         /// <typeparam name="T">Type of data in ClientResponse.</typeparam>
         /// <param name="responseMessage">The HTTP response message.</param>
@@ -71,7 +77,7 @@
             {
                 case HttpStatusCode.Unauthorized:
                     clientResponse.Status = OperationStatus.Error;
-                    clientResponse.Message = MessagesHelper.UnauthorizedMessage;
+                    clientResponse.Message = MessagesConstants.UnauthorizedMessage;
                     break;
                 case HttpStatusCode.NotFound:
                     clientResponse.Status = OperationStatus.NotFound;
@@ -79,26 +85,30 @@
                     break;
                 case HttpStatusCode.Created:
                     clientResponse.Status = OperationStatus.Susseess;
-                    clientResponse.Message = MessagesHelper.StandartSuccessMessage;
+                    clientResponse.Message = MessagesConstants.StandartSuccessMessage;
                     break;
                 case HttpStatusCode.OK:
-                    clientResponse.Status = OperationStatus.Susseess;
-                    clientResponse.Message = MessagesHelper.StandartSuccessMessage;
                     string jsonString = await responseMessage.Content.ReadAsStringAsync();
                     try
                     {
+                        clientResponse.Status = OperationStatus.Susseess;
+                        clientResponse.Message = MessagesConstants.StandartSuccessMessage;
                         clientResponse.ResponseData = JsonConvert.DeserializeObject<T>(jsonString);
                     }
                     catch (Exception)
                     {
-                        clientResponse.Message = $"{MessagesHelper.InvalidJsonMessage}: {jsonString}";
+                        clientResponse.Message = string.Format(
+                            CultureInfo.InvariantCulture, 
+                            "{0}: {1}", 
+                            MessagesConstants.InvalidJsonMessage, 
+                            jsonString);
                         clientResponse.Status = OperationStatus.Error;
                     }
 
                     break;
                 default:
                     clientResponse.Status = OperationStatus.UnknownState;
-                    clientResponse.Message = MessagesHelper.UnknownErrorMessage;
+                    clientResponse.Message = MessagesConstants.UnknownErrorMessage;
                     break;
             }
 
@@ -139,7 +149,7 @@
                 this.accessToken);
             request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Get;
-            var fullUrl = $"{HttpRequestSender.BasicEndpoint}{url}";
+            var fullUrl = string.Format(CultureInfo.InvariantCulture, "{0}{1}", HttpRequestSender.BasicEndpoint, url);
             request.RequestUri = new Uri(fullUrl);
             using (var httpClient = new HttpClient())
             {
@@ -162,8 +172,8 @@
                 this.accessToken);
             request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Post;
-            request.Content = new StringContent(content, Encoding.UTF8, "application/json");
-            var fullUrl = $"{HttpRequestSender.BasicEndpoint}{url}";
+            request.Content = new StringContent(content, Encoding.UTF8, HttpRequestSender.JsonContentType);
+            var fullUrl = string.Format(CultureInfo.InvariantCulture, "{0}{1}", HttpRequestSender.BasicEndpoint, url);
             request.RequestUri = new Uri(fullUrl);
             using (var httpClient = new HttpClient())
             {

@@ -38,19 +38,5 @@
         /// </summary>
         [JsonProperty("parents")]
         public IEnumerable<BasicCommitData> Parents { get; set; }
-
-        /// <summary>
-        /// Creates string representation of object.
-        /// </summary>
-        /// <returns>String representation of object.</returns>
-        public override string ToString()
-        {
-            StringBuilder str = new StringBuilder();
-            str.AppendLine($"sha: {Sha}");
-            str.AppendLine($"date: {CommitData.Commiter.Date}");
-            str.AppendLine($"commiter: {CommitAuthor.Login}");
-            str.AppendLine($"email: {CommitData.Commiter.Email}");
-            return str.ToString();
-        }
     }
 }

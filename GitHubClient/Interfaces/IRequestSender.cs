@@ -9,7 +9,7 @@
     public interface IRequestSender
     {
         /// <summary>
-        /// Sends GETrequest to absolute URl.
+        /// Sends GET request to absolute URl.
         /// </summary>
         /// <param name="url">The absolute URL.</param>
         /// <returns>HTTP response message.</returns>

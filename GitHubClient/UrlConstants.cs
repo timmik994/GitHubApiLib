@@ -8,26 +8,47 @@
         /// <summary>
         /// Path to current user.
         /// </summary>
-        public const string CurrentUserUrlPart = "user";
+        public const string CurrentUserUrl = "/user";
 
         /// <summary>
-        /// Part of path to users.
+        /// Template of URL to get data of user. {0} is username.
         /// </summary>
-        public const string UsersUrlPart = "users";
+        public const string UserDataUrlTemplate = "/users/{0}";
 
         /// <summary>
-        /// Part of path to repositories.
+        /// URL to get data about repositories of current user,
+        /// or create new repository.
         /// </summary>
-        public const string RepositoriesUrlPart = "repos";
+        public const string CurrentUserRepositoriesUrl = "/user/repos";
 
         /// <summary>
-        /// Part of path to branches.
+        /// Template of URL to get data about repository. {0} is username,
+        /// {1} is repository name.
         /// </summary>
-        public const string BranchesUrlPart = "branches";
+        public const string RepositoryDataUrlTemplate = "/repos/{0}/{1}";
 
         /// <summary>
-        /// Part of path to commits.
+        /// Template of URL to get data about repositories of user.
+        /// {0} is username.
         /// </summary>
-        public const string CommitsUrlPart = "commits";
+        public const string UserRepositoriesUrlTemplate = "/users/{0}/repos";
+
+        /// <summary>
+        /// Template of URL to get data about commits in repository.
+        /// {0} is username, {1} is repository name.
+        /// </summary>
+        public const string RepositoryCommitsUrlTemplate = "/repos/{0}/{1}/commits";
+
+        /// <summary>
+        /// Template of URL to get data about commits in branch.
+        /// {0} is username, {1} is repository name, {2} is branch name.
+        /// </summary>
+        public const string BranchCommitsUrlTemplate = "repos/{0}/{1}/commits?sha={2}";
+
+        /// <summary>
+        /// Template of URL to get branches of repository.
+        /// {0} is username, {1} is repository name.
+        /// </summary>
+        public const string RepositoryBranchesUrlTemplate = "repos/{0}/{1}/branches";
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace GitHubClient
 {
+    using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
     using GitHubClient.Interfaces;
@@ -39,7 +40,7 @@
             {
                 var clientResponse = new ClientResponse<FullUserData>()
                 {
-                    Message = MessagesHelper.DataAlreadyLoadedMessage,
+                    Message = MessagesConstants.DataAlreadyLoadedMessage,
                     ResponseData = this.currentUser,
                     Status = OperationStatus.Susseess
                 };
@@ -47,12 +48,12 @@
             }
             else
             {
-                var url = $"/{UrlConstants.CurrentUserUrlPart}";
+                var url = UrlConstants.CurrentUserUrl;
                 HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
                 ClientResponse<FullUserData> clientResponse = 
                     await this.requestSender.ProcessHttpResponse<FullUserData>(
                         httpResponse, 
-                        MessagesHelper.StandartNotFoundMessage);
+                        MessagesConstants.StandartNotFoundMessage);
                 this.currentUser = clientResponse.ResponseData;
                 return clientResponse;
             }
@@ -68,16 +69,20 @@
             if (username == string.Empty)
             {
                 var clientResponse = new ClientResponse<FullUserData>();
-                clientResponse.Message = MessagesHelper.EmptyDataMessage;
+                clientResponse.Message = MessagesConstants.EmptyDataMessage;
                 clientResponse.Status = OperationStatus.EmptyData;
                 return clientResponse;
             }
 
-            var url = $"/{UrlConstants.UsersUrlPart}/{username}";
+            var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserDataUrlTemplate, username);
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            var notFoundMessage = string.Format(
+                CultureInfo.InvariantCulture, 
+                MessagesConstants.UserNotFoundMessageTemplate,
+                username);
             return await this.requestSender.ProcessHttpResponse<FullUserData>(
                 httpResponse, 
-                MessagesHelper.GenerateUserNotFoundMessage(username));
+                notFoundMessage);
         }
 
         /// <summary>
@@ -95,7 +100,7 @@
             {
                 var clientResponse = new ClientResponse<FullUserData>()
                 {
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

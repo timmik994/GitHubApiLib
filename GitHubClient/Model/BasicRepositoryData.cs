@@ -1,4 +1,6 @@
-﻿namespace GitHubClient.Model
+﻿using System.Globalization;
+
+namespace GitHubClient.Model
 {
     using Newtonsoft.Json;
 
@@ -24,14 +26,5 @@
         /// </summary>
         [JsonProperty("description")]
         public string Description { get; set; }
-
-        /// <summary>
-        /// Get string representation of the class.
-        /// </summary>
-        /// <returns>String representation of class data.</returns>
-        public override string ToString()
-        {
-            return $"{this.Name}   {this.Owner.Login}  {this.Description}";
-        }
     }
 }

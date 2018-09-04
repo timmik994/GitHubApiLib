@@ -14,7 +14,7 @@
         private string accessToken;
 
         /// <summary>
-        /// Initializes a new instance of <see cref="ServiceFactory"/> class.
+        /// Initializes a new instance of the <see cref="ServiceFactory"/> class.
         /// </summary>
         /// <param name="accessToken">Access token of gitHub.</param>
         public ServiceFactory(string accessToken)

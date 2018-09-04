@@ -1,6 +1,7 @@
 ﻿namespace GitHubClient.DataServices
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Net.Http;
     using System.Threading.Tasks;
     using GitHubClient.Interfaces;
@@ -38,19 +39,19 @@
                 var clientResponse = new ClientResponse<string>
                 {
                     ResponseData = string.Empty,
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
             }
 
             string repositoryJson = JsonConvert.SerializeObject(repositoryData);
-            var url = $"/{UrlConstants.UsersUrlPart}/{UrlConstants.RepositoriesUrlPart}";
+            var url = UrlConstants.CurrentUserRepositoriesUrl;
             HttpResponseMessage httpResponse = 
                 await this.requestSender.SendPostRequestToGitHubApiAsync(url, repositoryJson);
             return await this.requestSender.ProcessHttpResponse<string>(
                 httpResponse, 
-                MessagesHelper.StandartNotFoundMessage);
+                MessagesConstants.StandartNotFoundMessage);
         }
 
         /// <summary>
@@ -59,12 +60,12 @@
         /// <returns>ClientResponse with collection of repositories.</returns>
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetCurrentUserRepository()
         {
-            var url = $"/{UrlConstants.CurrentUserUrlPart}/{UrlConstants.RepositoriesUrlPart}";
+            var url = UrlConstants.CurrentUserRepositoriesUrl;
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
             return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse, 
-                MessagesHelper.StandartNotFoundMessage);
+                MessagesConstants.StandartNotFoundMessage);
         }
 
         /// <summary>
@@ -74,13 +75,18 @@
         /// <returns>Full repository data of specified repository.</returns>
         public async Task<ClientResponse<FullRepositoryData>> GetFullRepositoryData(BasicRepositoryData repositoryData)
         {
-            var url = $"/{UrlConstants.RepositoriesUrlPart}/{repositoryData.Owner.Login}/{repositoryData.Name}";
+            var url = string.Format(
+                CultureInfo.InvariantCulture, 
+                UrlConstants.RepositoryDataUrlTemplate,
+                repositoryData.Owner.Login, 
+                repositoryData.Name);
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var clientResponse = new ClientResponse<FullRepositoryData>();
-            string notFoundMessage =
-                MessagesHelper.GenerateUserOrRepositoryNotFoundMessage(
-                    repositoryData.Owner.Login, 
-                    repositoryData.Name);
+            string notFoundMessage = string.Format(
+                CultureInfo.InvariantCulture,
+                MessagesConstants.UserOrRepositoryNotFoundMessageTemplate, 
+                repositoryData.Owner.Login, 
+                repositoryData.Name);
             return await this.requestSender.ProcessHttpResponse<FullRepositoryData>(
                 httpResponse, 
                 notFoundMessage);
@@ -97,17 +103,21 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
             }
 
-            var url = $"/{UrlConstants.UsersUrlPart}/{username}/{UrlConstants.RepositoriesUrlPart}";
+            var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserRepositoriesUrlTemplate, username);
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            var notFoundMessage = string.Format(
+                CultureInfo.InvariantCulture,
+                MessagesConstants.UserNotFoundMessageTemplate,
+                username);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse, 
-                MessagesHelper.GenerateUserNotFoundMessage(username));
+                notFoundMessage);
         }
 
         /// <summary>
@@ -121,7 +131,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
-                    Message = MessagesHelper.EmptyDataMessage,
+                    Message = MessagesConstants.EmptyDataMessage,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

@@ -15,14 +15,14 @@
         Task<ClientResponse<FullUserData>> GetCurrentUser();
 
         /// <summary>
-        /// Get full data about user.
+        /// Gets full data about user.
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns>ClientResponse instance with full data about specified user.</returns>
         Task<ClientResponse<FullUserData>> GetFullUserData(string username);
 
         /// <summary>
-        /// Get full user data about specified user.
+        /// Gets full user data about specified user.
         /// </summary>
         /// <param name="userData">The basic user data.</param>
         /// <returns>ClientResponse instance with full data about specified user.</returns>

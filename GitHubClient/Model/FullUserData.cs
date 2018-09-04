@@ -2,7 +2,6 @@
 {
     using System;
     using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
 
     /// <summary>
     /// Full data of gitHub user.

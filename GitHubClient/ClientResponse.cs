@@ -21,5 +21,4 @@
         /// </summary>
         public T ResponseData { get; set; }
     }
-
 }

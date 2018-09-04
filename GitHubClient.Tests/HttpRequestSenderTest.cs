@@ -1,6 +1,7 @@
 ﻿namespace GitHubClient.Tests
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
@@ -54,7 +55,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesHelper.UnauthorizedMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.UnauthorizedMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Error, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -72,7 +73,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesHelper.UnknownErrorMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.UnknownErrorMessage, testResponse.Message);
             Assert.Equal(OperationStatus.UnknownState, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -90,7 +91,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesHelper.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -115,7 +116,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesHelper.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             BasicUserData userDataAfterProcess = testResponse.ResponseData;
             Assert.Equal(HttpRequestSenderTest.TestUsername, userDataAfterProcess.Login);
@@ -148,7 +149,7 @@
                     HttpRequestSenderTest.TestNotFoundMessage)
                     .GetAwaiter()
                     .GetResult();
-            Assert.Equal(MessagesHelper.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             IEnumerable<BasicUserData> testUsersCollection = testResponse.ResponseData;
             Assert.Equal(2, testUsersCollection.Count());
@@ -170,7 +171,11 @@
                     HttpRequestSenderTest.TestNotFoundMessage)
                     .GetAwaiter()
                     .GetResult();
-            string expextedMessage = $"{MessagesHelper.InvalidJsonMessage}: {invalidJson}";
+            string expextedMessage = string.Format(
+                CultureInfo.InvariantCulture, 
+                "{0}: {1}",
+                MessagesConstants.InvalidJsonMessage, 
+                invalidJson);
             Assert.Equal(expextedMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Error, testResponse.Status);
         }

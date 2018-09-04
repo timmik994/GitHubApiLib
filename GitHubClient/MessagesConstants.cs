@@ -3,7 +3,7 @@
     /// <summary>
     /// Message helper class.
     /// </summary>
-    public static class MessagesHelper
+    public static class MessagesConstants
     {
         /// <summary>
         /// Message if operation successful.
@@ -11,7 +11,7 @@
         public const string StandartSuccessMessage = "Operation end with success.";
 
         /// <summary>
-        /// Message is data loaded from local source.
+        /// Message if data loaded from local source.
         /// </summary>
         public const string DataAlreadyLoadedMessage = "Data already loaded from gitHub.";
 
@@ -41,36 +41,18 @@
         public const string StandartNotFoundMessage = "Requested data not found.";
 
         /// <summary>
-        /// Message if user not found.
+        /// Template for message if user not found.
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <returns>The client message.</returns>
-        public static string GenerateUserNotFoundMessage(string username)
-        {
-            return $"User {username} Not found.";
-        }
+        public const string UserNotFoundMessageTemplate = "User {0} Not found.";
 
         /// <summary>
-        /// Generates message if user or repository not found.
+        /// Template for message if user or repository not found.
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="repoName">The name of repository.</param>
-        /// <returns>The client message.</returns>
-        public static string GenerateUserOrRepositoryNotFoundMessage(string username, string repoName)
-        {
-            return $"User {username} or repository {repoName} not found.";
-        }
+        public const string UserOrRepositoryNotFoundMessageTemplate = "User {0} or repository {1} not found.";
 
         /// <summary>
-        /// Generates message if user, repository or branch not found.
+        /// Template for message if user, repository or branch not found.
         /// </summary>
-        /// <param name="username">The username.</param>
-        /// <param name="repoName">The name of repository.</param>
-        /// <param name="branchName">The name of the branch.</param>
-        /// <returns>The client message.</returns>
-        public static string GenerateRepoUserBranchNotFoundMessage(string username, string repoName, string branchName)
-        {
-            return $"User {username} or repository {repoName} or branch {branchName} not found.";
-        }
+        public const string RepoUserBranchNotFoundMessageTemplate = "User {0} or repository {1} or branch {2} not found.";
     }
 }
