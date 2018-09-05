@@ -28,7 +28,7 @@
             var commitService = new CommitService(mock.Object);
             ClientResponse<IEnumerable<Commit>> testResponse =
                 commitService.GetBranchCommits(username, repositoryName, branchName).GetAwaiter().GetResult();
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -42,7 +42,7 @@
             var commitService = new CommitService(mock.Object);
             ClientResponse<IEnumerable<Commit>> testResponse =
                 commitService.GetBranchCommits(null, new Branch()).GetAwaiter().GetResult();
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -56,7 +56,7 @@
             var commitService = new CommitService(mock.Object);
             ClientResponse<IEnumerable<Commit>> testResponse =
                 commitService.GetBranchCommits(new BasicRepositoryData(), null).GetAwaiter().GetResult();
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -74,7 +74,7 @@
             var commitService = new CommitService(mock.Object);
             ClientResponse<IEnumerable<Commit>> testResponse =
                 commitService.GetRepositoryCommits(username, repositoryName).GetAwaiter().GetResult();
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
 
@@ -88,7 +88,7 @@
             var commitService = new CommitService(mock.Object);
             ClientResponse<IEnumerable<Commit>> testResponse =
                 commitService.GetRepositoryCommits((BasicRepositoryData)null).GetAwaiter().GetResult();
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
             Assert.Equal(OperationStatus.EmptyData, testResponse.Status);
         }
     }

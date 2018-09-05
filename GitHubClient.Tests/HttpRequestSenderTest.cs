@@ -55,7 +55,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesConstants.UnauthorizedMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.Unauthorized, testResponse.Message);
             Assert.Equal(OperationStatus.Error, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -73,7 +73,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesConstants.UnknownErrorMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.UnknownError, testResponse.Message);
             Assert.Equal(OperationStatus.UnknownState, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -91,7 +91,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -116,7 +116,7 @@
                 HttpRequestSenderTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             BasicUserData userDataAfterProcess = testResponse.ResponseData;
             Assert.Equal(HttpRequestSenderTest.TestUsername, userDataAfterProcess.Login);
@@ -149,7 +149,7 @@
                     HttpRequestSenderTest.TestNotFoundMessage)
                     .GetAwaiter()
                     .GetResult();
-            Assert.Equal(MessagesConstants.StandartSuccessMessage, testResponse.Message);
+            Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             IEnumerable<BasicUserData> testUsersCollection = testResponse.ResponseData;
             Assert.Equal(2, testUsersCollection.Count());
@@ -174,7 +174,7 @@
             string expextedMessage = string.Format(
                 CultureInfo.InvariantCulture, 
                 "{0}: {1}",
-                MessagesConstants.InvalidJsonMessage, 
+                MessageConstants.InvalidJson, 
                 invalidJson);
             Assert.Equal(expextedMessage, testResponse.Message);
             Assert.Equal(OperationStatus.Error, testResponse.Status);

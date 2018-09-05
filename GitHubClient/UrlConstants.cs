@@ -50,5 +50,15 @@
         /// {0} is username, {1} is repository name.
         /// </summary>
         public const string RepositoryBranchesUrlTemplate = "repos/{0}/{1}/branches";
+
+        /// <summary>
+        /// The URL of basic gitHub endpoint.
+        /// </summary>
+        public const string BasicEndpoint = "https://api.github.com";
+
+        /// <summary>
+        /// The URL of graphQl gitHub endpoint.
+        /// </summary>
+        public const string GraphQlEndpoint = "https://api.github.com/graphql";
     }
 }

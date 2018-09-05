@@ -14,14 +14,14 @@
     public class RepositoryService : IRepositoryService
     {
         /// <summary>
-        /// Instance of requsetSender to send requests to gitHub API.
+        /// The request sender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryService" /> class.
         /// </summary>
-        /// <param name="requestSender">The IRequestSender instance.</param>
+        /// <param name="requestSender">The request sender.</param>
         public RepositoryService(IRequestSender requestSender)
         {
             this.requestSender = requestSender;
@@ -39,19 +39,20 @@
                 var clientResponse = new ClientResponse<string>
                 {
                     ResponseData = string.Empty,
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
             }
 
             string repositoryJson = JsonConvert.SerializeObject(repositoryData);
-            var url = UrlConstants.CurrentUserRepositoriesUrl;
             HttpResponseMessage httpResponse = 
-                await this.requestSender.SendPostRequestToGitHubApiAsync(url, repositoryJson);
+                await this.requestSender.SendPostRequestToGitHubApiAsync(
+                    UrlConstants.CurrentUserRepositoriesUrl, 
+                    repositoryJson);
             return await this.requestSender.ProcessHttpResponse<string>(
                 httpResponse, 
-                MessagesConstants.StandartNotFoundMessage);
+                MessageConstants.ObjectNotFound);
         }
 
         /// <summary>
@@ -60,12 +61,12 @@
         /// <returns>ClientResponse with collection of repositories.</returns>
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetCurrentUserRepository()
         {
-            var url = UrlConstants.CurrentUserRepositoriesUrl;
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            HttpResponseMessage httpResponse = 
+                await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl);
             var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
             return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse, 
-                MessagesConstants.StandartNotFoundMessage);
+                MessageConstants.ObjectNotFound);
         }
 
         /// <summary>
@@ -84,7 +85,7 @@
             var clientResponse = new ClientResponse<FullRepositoryData>();
             string notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
-                MessagesConstants.UserOrRepositoryNotFoundMessageTemplate, 
+                MessageConstants.UserOrRepositoryNotFoundTemplate, 
                 repositoryData.Owner.Login, 
                 repositoryData.Name);
             return await this.requestSender.ProcessHttpResponse<FullRepositoryData>(
@@ -103,7 +104,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -113,7 +114,7 @@
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
-                MessagesConstants.UserNotFoundMessageTemplate,
+                MessageConstants.UserNotFoundTemplate,
                 username);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse, 
@@ -131,7 +132,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

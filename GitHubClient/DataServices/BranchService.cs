@@ -13,14 +13,14 @@
     public class BranchService : IBranchService
     {
         /// <summary>
-        /// Instance of requsetSender to send requests to gitHub API.
+        /// The request sender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchService" /> class.
         /// </summary>
-        /// <param name="requestSender">Instance of requsetSender.</param>
+        /// <param name="requestSender">The request sender.</param>
         public BranchService(IRequestSender requestSender)
         {
             this.requestSender = requestSender;
@@ -38,7 +38,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -52,7 +52,7 @@
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             string notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
-                MessagesConstants.UserOrRepositoryNotFoundMessageTemplate,
+                MessageConstants.UserOrRepositoryNotFoundTemplate,
                 username,
                 repositoryName);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<Branch>>(
@@ -71,7 +71,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

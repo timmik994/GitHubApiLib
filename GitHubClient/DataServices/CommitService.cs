@@ -13,14 +13,14 @@
     public class CommitService : ICommitService
     {
         /// <summary>
-        /// Instance of requsetSender to send requests to gitHub API.
+        /// The request sender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommitService" /> class.
         /// </summary>
-        /// <param name="requestSender">Instance of requsetSender.</param>
+        /// <param name="requestSender">The request sender.</param>
         public CommitService(IRequestSender requestSender)
         {
             this.requestSender = requestSender;
@@ -40,7 +40,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Commit>>()
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -65,7 +65,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Commit>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -80,7 +80,7 @@
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
-                MessagesConstants.RepoUserBranchNotFoundMessageTemplate, 
+                MessageConstants.RepoUserBranchNotFoundTemplate, 
                 username, 
                 repositoryName, 
                 branchName);
@@ -100,7 +100,7 @@
             {
                 var clientResponse = new ClientResponse<Commit>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -110,7 +110,7 @@
                 await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
             return await this.requestSender.ProcessHttpResponse<Commit>(
                 httpResponse, 
-                MessagesConstants.StandartNotFoundMessage);
+                MessageConstants.ObjectNotFound);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Commit>>
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;
@@ -141,7 +141,7 @@
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             string notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
-                MessagesConstants.UserOrRepositoryNotFoundMessageTemplate,
+                MessageConstants.UserOrRepositoryNotFoundTemplate,
                 username,
                 repositoryName);
             return await this.requestSender.ProcessHttpResponse<IEnumerable<Commit>>(
@@ -160,7 +160,7 @@
             {
                 var clientResponse = new ClientResponse<IEnumerable<Commit>>()
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

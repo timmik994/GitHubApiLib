@@ -29,7 +29,7 @@
             FullUserData testUserObject = this.GenerateTestUser();
             ClientResponse<FullUserData> mockResponse = new ClientResponse<FullUserData>()
             {
-                Message = MessagesConstants.StandartSuccessMessage,
+                Message = MessageConstants.SuccessOperation,
                 Status = OperationStatus.Susseess,
                 ResponseData = testUserObject
             };
@@ -38,7 +38,7 @@
             mock.Setup(sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl))
                 .ReturnsAsync(testResponse);
             mock.Setup(sender =>
-                    sender.ProcessHttpResponse<FullUserData>(testResponse, MessagesConstants.StandartNotFoundMessage))
+                    sender.ProcessHttpResponse<FullUserData>(testResponse, MessageConstants.ObjectNotFound))
                 .ReturnsAsync(mockResponse);
             UserService userService = new UserService(mock.Object);
             ClientResponse<FullUserData> testClientResponseFirst = 
@@ -46,12 +46,12 @@
             ClientResponse<FullUserData> testClientResponseSecond = 
                 userService.GetCurrentUser().GetAwaiter().GetResult();
             Assert.Equal(testClientResponseFirst.ResponseData, testClientResponseSecond.ResponseData);
-            Assert.Equal(MessagesConstants.DataAlreadyLoadedMessage, testClientResponseSecond.Message);
+            Assert.Equal(MessageConstants.DataAlreadyLoaded, testClientResponseSecond.Message);
             mock.Verify(
                 sender => sender.ProcessHttpResponse<FullUserData>(
                     testResponse, 
-                    MessagesConstants.StandartNotFoundMessage), 
-                Times.Once);
+                    MessageConstants.ObjectNotFound), 
+                    Times.Once);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@
             ClientResponse<FullUserData> testClientResponse = 
                 userService.GetFullUserData((BasicUserData)null).GetAwaiter().GetResult();
             Assert.Equal(OperationStatus.EmptyData, testClientResponse.Status);
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testClientResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testClientResponse.Message);
             Assert.Null(testClientResponse.ResponseData);
         }
 
@@ -82,7 +82,7 @@
             ClientResponse<FullUserData> testClientResponse = 
                 userService.GetFullUserData(string.Empty).GetAwaiter().GetResult();
             Assert.Equal(OperationStatus.EmptyData, testClientResponse.Status);
-            Assert.Equal(MessagesConstants.EmptyDataMessage, testClientResponse.Message);
+            Assert.Equal(MessageConstants.EmptyData, testClientResponse.Message);
             Assert.Null(testClientResponse.ResponseData);
         }
 

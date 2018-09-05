@@ -17,14 +17,14 @@
         private FullUserData currentUser;
 
         /// <summary>
-        /// Instance of requsetSender to send requests to gitHub API.
+        /// The request sender to send requests to gitHub API.
         /// </summary>
         private IRequestSender requestSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserService" /> class.
         /// </summary>
-        /// <param name="requestSender">The IRequestSender instance.</param>
+        /// <param name="requestSender">The request sender.</param>
         public UserService(IRequestSender requestSender)
         {
             this.requestSender = requestSender;
@@ -40,7 +40,7 @@
             {
                 var clientResponse = new ClientResponse<FullUserData>()
                 {
-                    Message = MessagesConstants.DataAlreadyLoadedMessage,
+                    Message = MessageConstants.DataAlreadyLoaded,
                     ResponseData = this.currentUser,
                     Status = OperationStatus.Susseess
                 };
@@ -48,12 +48,12 @@
             }
             else
             {
-                var url = UrlConstants.CurrentUserUrl;
-                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                HttpResponseMessage httpResponse = 
+                    await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl);
                 ClientResponse<FullUserData> clientResponse = 
                     await this.requestSender.ProcessHttpResponse<FullUserData>(
                         httpResponse, 
-                        MessagesConstants.StandartNotFoundMessage);
+                        MessageConstants.ObjectNotFound);
                 this.currentUser = clientResponse.ResponseData;
                 return clientResponse;
             }
@@ -69,7 +69,7 @@
             if (username == string.Empty)
             {
                 var clientResponse = new ClientResponse<FullUserData>();
-                clientResponse.Message = MessagesConstants.EmptyDataMessage;
+                clientResponse.Message = MessageConstants.EmptyData;
                 clientResponse.Status = OperationStatus.EmptyData;
                 return clientResponse;
             }
@@ -78,7 +78,7 @@
             HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
             var notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture, 
-                MessagesConstants.UserNotFoundMessageTemplate,
+                MessageConstants.UserNotFoundTemplate,
                 username);
             return await this.requestSender.ProcessHttpResponse<FullUserData>(
                 httpResponse, 
@@ -100,7 +100,7 @@
             {
                 var clientResponse = new ClientResponse<FullUserData>()
                 {
-                    Message = MessagesConstants.EmptyDataMessage,
+                    Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
                 return clientResponse;

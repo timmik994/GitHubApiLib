@@ -16,31 +16,6 @@
     public class HttpRequestSender : IRequestSender
     {
         /// <summary>
-        /// The URL of basic gitHub endpoint.
-        /// </summary>
-        public const string BasicEndpoint = "https://api.github.com";
-
-        /// <summary>
-        /// The URL of graphQl gitHub endpoint.
-        /// </summary>
-        public const string GraphQlEndpoint = "https://api.github.com/graphql";
-
-        /// <summary>
-        /// The scheme of authorization.
-        /// </summary>
-        public const string AuthorithationScheme = "Bearer";
-
-        /// <summary>
-        /// The name of user agent header.
-        /// </summary>
-        public const string UserAgentHeaderName = "User-Agent";
-
-        /// <summary>
-        /// Content type header value for json objects.
-        /// </summary>
-        public const string JsonContentType = "application/json";
-
-        /// <summary>
         /// The access token from gitHub.
         /// </summary>
         private string accessToken;
@@ -62,7 +37,8 @@
         }
 
         /// <summary>
-        /// Processes HTTP response with some json data.
+        /// Processes HTTP response with json data from gitHub API.
+        /// De-serializes data in object with <see cref="T"/> type.
         /// </summary>
         /// <typeparam name="T">Type of data in ClientResponse.</typeparam>
         /// <param name="responseMessage">The HTTP response message.</param>
@@ -77,7 +53,7 @@
             {
                 case HttpStatusCode.Unauthorized:
                     clientResponse.Status = OperationStatus.Error;
-                    clientResponse.Message = MessagesConstants.UnauthorizedMessage;
+                    clientResponse.Message = MessageConstants.Unauthorized;
                     break;
                 case HttpStatusCode.NotFound:
                     clientResponse.Status = OperationStatus.NotFound;
@@ -85,22 +61,22 @@
                     break;
                 case HttpStatusCode.Created:
                     clientResponse.Status = OperationStatus.Susseess;
-                    clientResponse.Message = MessagesConstants.StandartSuccessMessage;
+                    clientResponse.Message = MessageConstants.SuccessOperation;
                     break;
                 case HttpStatusCode.OK:
                     string jsonString = await responseMessage.Content.ReadAsStringAsync();
                     try
                     {
                         clientResponse.Status = OperationStatus.Susseess;
-                        clientResponse.Message = MessagesConstants.StandartSuccessMessage;
+                        clientResponse.Message = MessageConstants.SuccessOperation;
                         clientResponse.ResponseData = JsonConvert.DeserializeObject<T>(jsonString);
                     }
                     catch (Exception)
                     {
                         clientResponse.Message = string.Format(
                             CultureInfo.InvariantCulture, 
-                            "{0}: {1}", 
-                            MessagesConstants.InvalidJsonMessage, 
+                            MessageConstants.InvalidJsonErrorTemplate, 
+                            MessageConstants.InvalidJson, 
                             jsonString);
                         clientResponse.Status = OperationStatus.Error;
                     }
@@ -108,7 +84,7 @@
                     break;
                 default:
                     clientResponse.Status = OperationStatus.UnknownState;
-                    clientResponse.Message = MessagesConstants.UnknownErrorMessage;
+                    clientResponse.Message = MessageConstants.UnknownError;
                     break;
             }
 
@@ -124,9 +100,9 @@
         {
             HttpRequestMessage request = new HttpRequestMessage();
             request.Headers.Authorization = new AuthenticationHeaderValue(
-                HttpRequestSender.AuthorithationScheme, 
+                HttpMetadataConstants.AuthorithationScheme, 
                 this.accessToken);
-            request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
+            request.Headers.Add(HttpMetadataConstants.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Get;
             request.RequestUri = new Uri(url);
             using (var httpClient = new HttpClient())
@@ -145,11 +121,11 @@
         {
             HttpRequestMessage request = new HttpRequestMessage();
             request.Headers.Authorization = new AuthenticationHeaderValue(
-                HttpRequestSender.AuthorithationScheme, 
+                HttpMetadataConstants.AuthorithationScheme, 
                 this.accessToken);
-            request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
+            request.Headers.Add(HttpMetadataConstants.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Get;
-            var fullUrl = string.Format(CultureInfo.InvariantCulture, "{0}{1}", HttpRequestSender.BasicEndpoint, url);
+            var fullUrl = string.Concat(UrlConstants.BasicEndpoint, url);
             request.RequestUri = new Uri(fullUrl);
             using (var httpClient = new HttpClient())
             {
@@ -168,12 +144,12 @@
         {
             HttpRequestMessage request = new HttpRequestMessage();
             request.Headers.Authorization = new AuthenticationHeaderValue(
-                HttpRequestSender.AuthorithationScheme, 
+                HttpMetadataConstants.AuthorithationScheme, 
                 this.accessToken);
-            request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
+            request.Headers.Add(HttpMetadataConstants.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Post;
-            request.Content = new StringContent(content, Encoding.UTF8, HttpRequestSender.JsonContentType);
-            var fullUrl = string.Format(CultureInfo.InvariantCulture, "{0}{1}", HttpRequestSender.BasicEndpoint, url);
+            request.Content = new StringContent(content, Encoding.UTF8, HttpMetadataConstants.JsonContentType);
+            var fullUrl = string.Concat(UrlConstants.BasicEndpoint, url);
             request.RequestUri = new Uri(fullUrl);
             using (var httpClient = new HttpClient())
             {
@@ -191,11 +167,12 @@
         {
             HttpRequestMessage request = new HttpRequestMessage();
             request.Headers.Authorization = new AuthenticationHeaderValue(
-                HttpRequestSender.AuthorithationScheme, 
+                HttpMetadataConstants.AuthorithationScheme, 
                 this.accessToken);
-            request.Headers.Add(HttpRequestSender.UserAgentHeaderName, this.userAgent);
+            request.Headers.Add(HttpMetadataConstants.UserAgentHeaderName, this.userAgent);
             request.Method = HttpMethod.Post;
             request.Content = new StringContent(graphQlRequest, Encoding.UTF8);
+            request.RequestUri = new Uri(UrlConstants.GraphQlEndpoint);
             using (var httpClient = new HttpClient())
             {
                 HttpResponseMessage response = await httpClient.SendAsync(request);

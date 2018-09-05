@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace GitHubClient.Model
+﻿namespace GitHubClient.Model
 {
     using Newtonsoft.Json;
 
