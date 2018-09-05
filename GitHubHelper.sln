@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubHelper", "GitHubHelpe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubClient", "GitHubClient\GitHubClient.csproj", "{1FA4245A-F24A-4718-A1B8-7BB9097A1DCC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubClient.Tests", "GitHubClient.Test\GitHubClient.Tests.csproj", "{F42D110D-8C01-4BD5-A211-F11E1CD59812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubHelper.Tests", "GitHubHelper.Tests\GitHubHelper.Tests.csproj", "{B92C73C3-E040-4C57-AA86-8D813FCF52C9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubHelper.Test", "GitHubHelper.Test\GitHubHelper.Test.csproj", "{B92C73C3-E040-4C57-AA86-8D813FCF52C9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitHubClient.Tests", "GitHubClient.Tests\GitHubClient.Tests.csproj", "{B426D0C2-BE5D-46B1-B451-4FA0C377FA57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,14 +25,14 @@ Global
 		{1FA4245A-F24A-4718-A1B8-7BB9097A1DCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1FA4245A-F24A-4718-A1B8-7BB9097A1DCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1FA4245A-F24A-4718-A1B8-7BB9097A1DCC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F42D110D-8C01-4BD5-A211-F11E1CD59812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F42D110D-8C01-4BD5-A211-F11E1CD59812}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F42D110D-8C01-4BD5-A211-F11E1CD59812}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F42D110D-8C01-4BD5-A211-F11E1CD59812}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B92C73C3-E040-4C57-AA86-8D813FCF52C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B92C73C3-E040-4C57-AA86-8D813FCF52C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B92C73C3-E040-4C57-AA86-8D813FCF52C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B92C73C3-E040-4C57-AA86-8D813FCF52C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B426D0C2-BE5D-46B1-B451-4FA0C377FA57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B426D0C2-BE5D-46B1-B451-4FA0C377FA57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B426D0C2-BE5D-46B1-B451-4FA0C377FA57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B426D0C2-BE5D-46B1-B451-4FA0C377FA57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
