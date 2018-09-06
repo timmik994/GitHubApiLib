@@ -38,7 +38,7 @@
             //GitHubApiClient gitHubClient = GitHubApiClient.GetInstance();
             //gitHubClient.SetAccessToken(token);
             ContinueRunning = true;
-            var commandFactory = new CommandFactory();
+            var commandFactory = new CommandFactory(token);
             while (ContinueRunning)
             {
                 Console.WriteLine(Program.DelimeterMessage);

@@ -23,17 +23,8 @@
             var httpResponse = new HttpResponseMessage(HttpStatusCode.Created);
             var mock = new Mock<IRequestSender>();
             var url = UrlConstants.CurrentUserRepositoriesUrl;
-            var mockResponse = new ClientResponse<string>()
-            {
-                Message = MessageConstants.SuccessOperation,
-                Status = OperationStatus.Susseess
-            };
-
             mock.Setup(sender => sender.SendGetRequestToGitHubApiAsync(url))
                 .ReturnsAsync(httpResponse);
-            mock.Setup(sender =>
-                    sender.ProcessHttpResponse<string>(httpResponse, MessageConstants.ObjectNotFound))
-                .ReturnsAsync(mockResponse);
             RepositoryService repoService = new RepositoryService(mock.Object);
             ClientResponse<string> testResponse = repoService.CreateRepository(null).GetAwaiter().GetResult();
             Assert.Equal(MessageConstants.EmptyData, testResponse.Message);
@@ -48,17 +39,8 @@
         {
             var httpResponseMessage = new HttpResponseMessage(HttpStatusCode.Created);
             var mock = new Mock<IRequestSender>();
-            var mockResponse = new ClientResponse<string>()
-            {
-                Message = MessageConstants.SuccessOperation,
-                Status = OperationStatus.Susseess
-            };
-
             mock.Setup(sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl))
                 .ReturnsAsync(httpResponseMessage);
-            mock.Setup(sender =>
-                    sender.ProcessHttpResponse<string>(httpResponseMessage, MessageConstants.ObjectNotFound))
-                .ReturnsAsync(mockResponse);
             RepositoryService repoService = new RepositoryService(mock.Object);
             CreateRepositoryModel createModel = new CreateRepositoryModel(string.Empty, string.Empty);
             ClientResponse<string> testResponse = repoService.CreateRepository(createModel).GetAwaiter().GetResult();

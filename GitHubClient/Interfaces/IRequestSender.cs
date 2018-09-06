@@ -36,16 +36,5 @@
         /// <param name="graphQlRequest">The graphQl request.</param>
         /// <returns>HTTP response message.</returns>
         Task<HttpResponseMessage> SendRequestToGraphQlEndpointAsync(string graphQlRequest);
-
-        /// <summary>
-        /// Method that processes HTTP response.
-        /// </summary>
-        /// <typeparam name="T">Type of data in ClientResponse.</typeparam>
-        /// <param name="responseMessage">The HTTP response message.</param>
-        /// <param name="notFoundErrorMessage">The message shown if status code is NotFound.</param>
-        /// <returns>ClientResponse instance with status and parsed data.</returns>
-        Task<ClientResponse<T>> ProcessHttpResponse<T>(
-            HttpResponseMessage responseMessage,
-            string notFoundErrorMessage);
     }
 }

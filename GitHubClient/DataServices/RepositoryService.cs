@@ -11,20 +11,14 @@
     /// <summary>
     /// Service that works with repositories.
     /// </summary>
-    public class RepositoryService : IRepositoryService
+    public class RepositoryService : AbstractGitHubService, IRepositoryService
     {
-        /// <summary>
-        /// The request sender to send requests to gitHub API.
-        /// </summary>
-        private IRequestSender requestSender;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryService" /> class.
         /// </summary>
         /// <param name="requestSender">The request sender.</param>
-        public RepositoryService(IRequestSender requestSender)
+        public RepositoryService(IRequestSender requestSender) : base(requestSender)
         {
-            this.requestSender = requestSender;
         }
 
         /// <summary>
@@ -34,25 +28,29 @@
         /// <returns>Client response with status of operation.</returns>
         public async Task<ClientResponse<string>> CreateRepository(CreateRepositoryModel repositoryData)
         {
+            ClientResponse<string> clientResponse;
             if (repositoryData == null || repositoryData.Name == string.Empty)
             {
-                var clientResponse = new ClientResponse<string>
+                clientResponse = new ClientResponse<string>
                 {
                     ResponseData = string.Empty,
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                string repositoryJson = JsonConvert.SerializeObject(repositoryData);
+                HttpResponseMessage httpResponse =
+                    await this.requestSender.SendPostRequestToGitHubApiAsync(
+                        UrlConstants.CurrentUserRepositoriesUrl,
+                        repositoryJson);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<string>(
+                    httpResponse,
+                    MessageConstants.ObjectNotFound);
             }
 
-            string repositoryJson = JsonConvert.SerializeObject(repositoryData);
-            HttpResponseMessage httpResponse = 
-                await this.requestSender.SendPostRequestToGitHubApiAsync(
-                    UrlConstants.CurrentUserRepositoriesUrl, 
-                    repositoryJson);
-            return await this.requestSender.ProcessHttpResponse<string>(
-                httpResponse, 
-                MessageConstants.ObjectNotFound);
+            return clientResponse;
         }
 
         /// <summary>
@@ -63,10 +61,11 @@
         {
             HttpResponseMessage httpResponse = 
                 await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl);
-            var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>();
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
-                httpResponse, 
+            ClientResponse<IEnumerable<FullRepositoryData>> clientResponse = 
+                await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
+                httpResponse,
                 MessageConstants.ObjectNotFound);
+            return clientResponse;
         }
 
         /// <summary>
@@ -88,7 +87,7 @@
                 MessageConstants.UserOrRepositoryNotFoundTemplate, 
                 repositoryData.Owner.Login, 
                 repositoryData.Name);
-            return await this.requestSender.ProcessHttpResponse<FullRepositoryData>(
+            return await HttpResponceParseHelper.ProcessHttpResponse<FullRepositoryData>(
                 httpResponse, 
                 notFoundMessage);
         }
@@ -100,25 +99,32 @@
         /// <returns>ClientResponse with collection of repositories.</returns>
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetUserRepositories(string username)
         {
-            if (username == string.Empty)
+            ClientResponse<IEnumerable<FullRepositoryData>> clientResponse;
+            if (string.IsNullOrEmpty(username))
             {
-                var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
+                clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                var url = string.Format(
+                    CultureInfo.InvariantCulture, 
+                    UrlConstants.UserRepositoriesUrlTemplate, 
+                    username);
+                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                var notFoundMessage = string.Format(
+                    CultureInfo.InvariantCulture,
+                    MessageConstants.UserNotFoundTemplate,
+                    username);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
+                    httpResponse,
+                    notFoundMessage);
             }
 
-            var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserRepositoriesUrlTemplate, username);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            var notFoundMessage = string.Format(
-                CultureInfo.InvariantCulture,
-                MessageConstants.UserNotFoundTemplate,
-                username);
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
-                httpResponse, 
-                notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>
@@ -128,17 +134,21 @@
         /// <returns>ClientResponse with collection of repositories.</returns>
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetUserRepositories(BasicUserData userData)
         {
+            ClientResponse<IEnumerable<FullRepositoryData>> clientResponse;
             if (userData == null)
             {
-                var clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
+                clientResponse = new ClientResponse<IEnumerable<FullRepositoryData>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                clientResponse = await this.GetUserRepositories(userData.Login);
             }
 
-            return await this.GetUserRepositories(userData.Login);
+            return clientResponse;
         }
     }
 }

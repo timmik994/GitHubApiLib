@@ -10,20 +10,14 @@
     /// <summary>
     /// Service that works with branch data.
     /// </summary>
-    public class BranchService : IBranchService
+    public class BranchService : AbstractGitHubService, IBranchService
     {
-        /// <summary>
-        /// The request sender to send requests to gitHub API.
-        /// </summary>
-        private IRequestSender requestSender;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchService" /> class.
         /// </summary>
         /// <param name="requestSender">The request sender.</param>
-        public BranchService(IRequestSender requestSender)
+        public BranchService(IRequestSender requestSender) : base(requestSender)
         {
-            this.requestSender = requestSender;
         }
 
         /// <summary>
@@ -34,9 +28,10 @@
         /// <returns>ClientResponse instance with collection of branches.</returns>
         public async Task<ClientResponse<IEnumerable<Branch>>> GetBranchList(string username, string repositoryName)
         {
-            if (username == string.Empty || repositoryName == string.Empty)
+            ClientResponse<IEnumerable<Branch>> clientResponse;
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(repositoryName))
             {
-                var clientResponse = new ClientResponse<IEnumerable<Branch>>
+                clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
@@ -55,9 +50,10 @@
                 MessageConstants.UserOrRepositoryNotFoundTemplate,
                 username,
                 repositoryName);
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<Branch>>(
-                httpResponse, 
+            clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Branch>>(
+                httpResponse,
                 notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>
@@ -67,17 +63,23 @@
         /// <returns>ClientResponse instance with collection of branches.</returns>
         public async Task<ClientResponse<IEnumerable<Branch>>> GetBranchList(BasicRepositoryData repositoryData)
         {
+            ClientResponse<IEnumerable<Branch>> clientResponse;
             if (repositoryData == null)
             {
-                var clientResponse = new ClientResponse<IEnumerable<Branch>>
+                clientResponse = new ClientResponse<IEnumerable<Branch>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                clientResponse = await this.GetBranchList(
+                    repositoryData.Owner.Login, 
+                    repositoryData.Name);
             }
 
-            return await this.GetBranchList(repositoryData.Owner.Login, repositoryData.Name);
+            return clientResponse;
         }
     }
 }

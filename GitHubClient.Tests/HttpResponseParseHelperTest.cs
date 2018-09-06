@@ -12,7 +12,7 @@
     /// <summary>
     /// Tests of HttpRequestSender class.
     /// </summary>
-    public class HttpRequestSenderTest
+    public class HttpResponseParseHelperTest
     {
         /// <summary>
         /// Test message for NotFound (404) status code.
@@ -30,14 +30,13 @@
         [Fact]
         public void TestProcessResponseWithNotFoundStatusCode()
         {
-            HttpRequestSender requestSender = new HttpRequestSender("token");
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.NotFound);
-            ClientResponse<string> testResponse = requestSender.ProcessHttpResponse<string>(
+            ClientResponse<string> testResponse = HttpResponceParseHelper.ProcessHttpResponse<string>(
                 message, 
-                HttpRequestSenderTest.TestNotFoundMessage)
+                HttpResponseParseHelperTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
-            Assert.Equal(HttpRequestSenderTest.TestNotFoundMessage, testResponse.Message);
+            Assert.Equal(HttpResponseParseHelperTest.TestNotFoundMessage, testResponse.Message);
             Assert.Equal(OperationStatus.NotFound, testResponse.Status);
             Assert.Null(testResponse.ResponseData);
         }
@@ -48,11 +47,10 @@
         [Fact]
         public void TestProcessResponseWithUnauthorizedCode()
         {
-            HttpRequestSender requestSender = new HttpRequestSender("token");
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.Unauthorized);
-            ClientResponse<string> testResponse = requestSender.ProcessHttpResponse<string>(
+            ClientResponse<string> testResponse = HttpResponceParseHelper.ProcessHttpResponse<string>(
                 message, 
-                HttpRequestSenderTest.TestNotFoundMessage)
+                HttpResponseParseHelperTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
             Assert.Equal(MessageConstants.Unauthorized, testResponse.Message);
@@ -66,11 +64,10 @@
         [Fact]
         public void TestProcessResponseWithUnknownError()
         {
-            HttpRequestSender requestSender = new HttpRequestSender("token");
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.InternalServerError);
-            ClientResponse<string> testResponse = requestSender.ProcessHttpResponse<string>(
+            ClientResponse<string> testResponse = HttpResponceParseHelper.ProcessHttpResponse<string>(
                 message, 
-                HttpRequestSenderTest.TestNotFoundMessage)
+                HttpResponseParseHelperTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
             Assert.Equal(MessageConstants.UnknownError, testResponse.Message);
@@ -84,11 +81,10 @@
         [Fact]
         public void TestProcessResponseWithCreatedCode()
         {
-            HttpRequestSender requestSender = new HttpRequestSender("token");
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.Created);
-            ClientResponse<string> testResponse = requestSender.ProcessHttpResponse<string>(
+            ClientResponse<string> testResponse = HttpResponceParseHelper.ProcessHttpResponse<string>(
                 message, 
-                HttpRequestSenderTest.TestNotFoundMessage)
+                HttpResponseParseHelperTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
             Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
@@ -104,22 +100,21 @@
         {
             BasicUserData testUserData = new BasicUserData()
             {
-                Login = HttpRequestSenderTest.TestUsername,
+                Login = HttpResponseParseHelperTest.TestUsername,
                 URL = "testUrl"
             };
             string userJson = JsonConvert.SerializeObject(testUserData);
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
             message.Content = new StringContent(userJson);
-            HttpRequestSender requestSender = new HttpRequestSender("token");
-            ClientResponse<BasicUserData> testResponse = requestSender.ProcessHttpResponse<BasicUserData>(
+            ClientResponse<BasicUserData> testResponse = HttpResponceParseHelper.ProcessHttpResponse<BasicUserData>(
                 message, 
-                HttpRequestSenderTest.TestNotFoundMessage)
+                HttpResponseParseHelperTest.TestNotFoundMessage)
                 .GetAwaiter()
                 .GetResult();
             Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
             Assert.Equal(OperationStatus.Susseess, testResponse.Status);
             BasicUserData userDataAfterProcess = testResponse.ResponseData;
-            Assert.Equal(HttpRequestSenderTest.TestUsername, userDataAfterProcess.Login);
+            Assert.Equal(HttpResponseParseHelperTest.TestUsername, userDataAfterProcess.Login);
         }
 
         /// <summary>
@@ -142,11 +137,10 @@
             string listJson = JsonConvert.SerializeObject(testUsersList);
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
             message.Content = new StringContent(listJson);
-            HttpRequestSender requestSender = new HttpRequestSender("token");
-            ClientResponse<IEnumerable<BasicUserData>> testResponse = 
-                requestSender.ProcessHttpResponse<IEnumerable<BasicUserData>>(
+            ClientResponse<IEnumerable<BasicUserData>> testResponse =
+                HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<BasicUserData>>(
                     message, 
-                    HttpRequestSenderTest.TestNotFoundMessage)
+                    HttpResponseParseHelperTest.TestNotFoundMessage)
                     .GetAwaiter()
                     .GetResult();
             Assert.Equal(MessageConstants.SuccessOperation, testResponse.Message);
@@ -164,11 +158,10 @@
             string invalidJson = "invalid json";
             HttpResponseMessage message = new HttpResponseMessage(HttpStatusCode.OK);
             message.Content = new StringContent(invalidJson);
-            HttpRequestSender requestSender = new HttpRequestSender("token");
-            ClientResponse<BasicUserData> testResponse = 
-                requestSender.ProcessHttpResponse<BasicUserData>(
+            ClientResponse<BasicUserData> testResponse =
+                HttpResponceParseHelper.ProcessHttpResponse<BasicUserData>(
                     message, 
-                    HttpRequestSenderTest.TestNotFoundMessage)
+                    HttpResponseParseHelperTest.TestNotFoundMessage)
                     .GetAwaiter()
                     .GetResult();
             string expextedMessage = string.Format(

@@ -1,4 +1,6 @@
-﻿namespace GitHubHelper.Commands
+﻿using GitHubClient.Interfaces;
+
+namespace GitHubHelper.Commands
 {
     using GitHubClient;
 
@@ -18,7 +20,7 @@
         /// </summary>
         /// <param name="consoleHelper">The ConsoleHelper instance.</param>
         /// <param name="gitHubClient">The GitHubClient instance.</param>
-        public ExitCommand(ConsoleWorker consoleHelper) : base(consoleHelper)
+        public ExitCommand(ConsoleWorker consoleHelper, IServiceFactory serviceFactory) : base(consoleHelper, serviceFactory)
         {
         }
 

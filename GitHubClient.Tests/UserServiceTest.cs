@@ -3,6 +3,7 @@
     using System;
     using System.Net;
     using System.Net.Http;
+    using GitHubClient.DataServices;
     using GitHubClient.Interfaces;
     using GitHubClient.Model;
     using Moq;
@@ -27,19 +28,9 @@
         {
             HttpResponseMessage testResponse = this.GenerateSuccessfulResponseMessage();
             FullUserData testUserObject = this.GenerateTestUser();
-            ClientResponse<FullUserData> mockResponse = new ClientResponse<FullUserData>()
-            {
-                Message = MessageConstants.SuccessOperation,
-                Status = OperationStatus.Susseess,
-                ResponseData = testUserObject
-            };
-
             var mock = new Mock<IRequestSender>();
             mock.Setup(sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl))
                 .ReturnsAsync(testResponse);
-            mock.Setup(sender =>
-                    sender.ProcessHttpResponse<FullUserData>(testResponse, MessageConstants.ObjectNotFound))
-                .ReturnsAsync(mockResponse);
             UserService userService = new UserService(mock.Object);
             ClientResponse<FullUserData> testClientResponseFirst = 
                 userService.GetCurrentUser().GetAwaiter().GetResult();
@@ -48,9 +39,7 @@
             Assert.Equal(testClientResponseFirst.ResponseData, testClientResponseSecond.ResponseData);
             Assert.Equal(MessageConstants.DataAlreadyLoaded, testClientResponseSecond.Message);
             mock.Verify(
-                sender => sender.ProcessHttpResponse<FullUserData>(
-                    testResponse, 
-                    MessageConstants.ObjectNotFound), 
+                sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl), 
                     Times.Once);
         }
 

@@ -10,20 +10,14 @@
     /// <summary>
     /// Service that works with commit data.
     /// </summary>
-    public class CommitService : ICommitService
+    public class CommitService : AbstractGitHubService, ICommitService
     {
-        /// <summary>
-        /// The request sender to send requests to gitHub API.
-        /// </summary>
-        private IRequestSender requestSender;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CommitService" /> class.
         /// </summary>
         /// <param name="requestSender">The request sender.</param>
-        public CommitService(IRequestSender requestSender)
+        public CommitService(IRequestSender requestSender) : base(requestSender)
         {
-            this.requestSender = requestSender;
         }
 
         /// <summary>
@@ -36,17 +30,24 @@
             BasicRepositoryData repository, 
             Branch branch)
         {
+            ClientResponse<IEnumerable<Commit>> clientResponse;
             if (repository == null || branch == null)
             {
-                var clientResponse = new ClientResponse<IEnumerable<Commit>>()
+                clientResponse = new ClientResponse<IEnumerable<Commit>>()
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                clientResponse = await this.GetBranchCommits(
+                    repository.Owner.Login, 
+                    repository.Name, 
+                    branch.Name);
             }
 
-            return await this.GetBranchCommits(repository.Owner.Login, repository.Name, branch.Name);
+            return clientResponse;
         }
 
         /// <summary>
@@ -61,9 +62,10 @@
             string repositoryName, 
             string branchName)
         {
-            if (username == string.Empty || repositoryName == string.Empty || branchName == string.Empty)
+            ClientResponse<IEnumerable<Commit>> clientResponse;
+            if (string.IsNullOrEmpty(username)  || string.IsNullOrEmpty(repositoryName) || string.IsNullOrEmpty(branchName))
             {
-                var clientResponse = new ClientResponse<IEnumerable<Commit>>
+                clientResponse = new ClientResponse<IEnumerable<Commit>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
@@ -84,9 +86,10 @@
                 username, 
                 repositoryName, 
                 branchName);
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<Commit>>(
+            clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
                 httpResponse, 
                 notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>
@@ -96,21 +99,25 @@
         /// <returns>ClientResponse with full data of the commit.</returns>
         public async Task<ClientResponse<Commit>> GetCommitData(BasicCommitData basicCommitData)
         {
+            ClientResponse<Commit> clientResponse;
             if (basicCommitData == null)
             {
-                var clientResponse = new ClientResponse<Commit>
+                clientResponse = new ClientResponse<Commit>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                HttpResponseMessage httpResponse =
+                    await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<Commit>(
+                    httpResponse,
+                    MessageConstants.ObjectNotFound);
             }
 
-            HttpResponseMessage httpResponse = 
-                await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
-            return await this.requestSender.ProcessHttpResponse<Commit>(
-                httpResponse, 
-                MessageConstants.ObjectNotFound);
+            return clientResponse;
         }
 
         /// <summary>
@@ -123,7 +130,7 @@
             string username, 
             string repositoryName)
         {
-            if (username == string.Empty || repositoryName == string.Empty)
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(repositoryName))
             {
                 var clientResponse = new ClientResponse<IEnumerable<Commit>>
                 {
@@ -144,7 +151,7 @@
                 MessageConstants.UserOrRepositoryNotFoundTemplate,
                 username,
                 repositoryName);
-            return await this.requestSender.ProcessHttpResponse<IEnumerable<Commit>>(
+            return await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
                 httpResponse, 
                 notFoundMessage);
         }
@@ -156,17 +163,23 @@
         /// <returns>ClientResponse instance with collections of commits.</returns>
         public async Task<ClientResponse<IEnumerable<Commit>>> GetRepositoryCommits(BasicRepositoryData repository)
         {
+            ClientResponse<IEnumerable<Commit>> clientResponse;
             if (repository == null)
             {
-                var clientResponse = new ClientResponse<IEnumerable<Commit>>()
+                clientResponse = new ClientResponse<IEnumerable<Commit>>()
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                clientResponse = await this.GetRepositoryCommits(
+                    repository.Owner.Login, 
+                    repository.Name);
             }
 
-            return await this.GetRepositoryCommits(repository.Owner.Login, repository.Name);
+            return clientResponse;
         }
     }
 }

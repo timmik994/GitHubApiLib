@@ -1,4 +1,6 @@
-﻿namespace GitHubHelper.Commands
+﻿using GitHubClient.Interfaces;
+
+namespace GitHubHelper.Commands
 {
     using System;
     using System.Collections.Generic;
@@ -46,7 +48,7 @@
         /// </summary>
         /// <param name="consoleHelper">The ConsoleHelper instance.</param>
         /// <param name="gitHubClient">The GitHubClient instance.</param>
-        public CommitCountCommand(ConsoleWorker consoleHelper) : base(consoleHelper)
+        public CommitCountCommand(ConsoleWorker consoleHelper, IServiceFactory serviceFactory) : base(consoleHelper, serviceFactory)
         {
         }
 

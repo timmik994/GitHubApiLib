@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using GitHubClient;
+    using GitHubClient.Interfaces;
     using GitHubClient.Model;
 
     /// <summary>
@@ -38,19 +39,24 @@
         /// <summary>
         /// The message from gitHub client.
         /// </summary>
-        private string message;
+        private string outputMessage;
+
+        /// <summary>
+        /// Indcates if command runs successful.
+        /// </summary>
+        private bool successful;
 
         /// <summary>
         /// The list of commits from git hub.
         /// </summary>
-        private List<Commit> commits;
+        private IEnumerable<Commit> commits;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BranchCommitsCommand" /> class.
         /// </summary>
         /// <param name="consoleHelper">The ConsoleHelper instance.</param>
         /// <param name="gitHubClient">The GitHubClient instance.</param>
-        public BranchCommitsCommand(ConsoleWorker consoleHelper) : base(consoleHelper)
+        public BranchCommitsCommand(ConsoleWorker consoleHelper, IServiceFactory serviceFactory) : base(consoleHelper, serviceFactory)
         {
         }
 
@@ -59,14 +65,14 @@
         /// </summary>
         public override void GetParameters()
         {
-            //this.isYourRepo = this.ConslWorker.AskBoolParam("Your repository?");
-            //if (!this.isYourRepo)
-            //{
-            //    this.username = this.ConslWorker.AskStringParam("Enter the username");
-            //}
+            this.isYourRepo = this.ConslWorker.AskBoolParam("Your repository?");
+            if (!this.isYourRepo)
+            {
+                this.username = this.ConslWorker.AskStringParam("Enter the username");
+            }
 
-            //this.repoName = this.ConslWorker.AskStringParam("Enter name of repository");
-            //this.branchName = this.ConslWorker.AskStringParam("Enter the branch name");
+            this.repoName = this.ConslWorker.AskStringParam("Enter name of repository");
+            this.branchName = this.ConslWorker.AskStringParam("Enter the branch name");
         }
 
         /// <summary>
@@ -74,16 +80,27 @@
         /// </summary>
         public override void RunCommand()
         {
-            //if (this.isYourRepo)
-            //{
-            //    this.username = this.GitHubClient.GetCurrentUser(out this.message);
-            //}
+            IUserService userService = this.ServiceFactory.CreateUserService();
+            if (this.isYourRepo)
+            {
+                ClientResponse<FullUserData> userResponse = userService.GetCurrentUser().GetAwaiter().GetResult();
+                if (userResponse.Status == OperationStatus.Susseess)
+                {
+                    this.username = userResponse.ResponseData.Login;
+                }
+                else
+                {
+                    this.successful = false;
+                    this.outputMessage = userResponse.Message;
+                    return;
+                }
 
-            //if (this.message == GitHubApiClient.SUCCESSMESSAGE)
-            //{
-            //    this.commits =
-            //        this.GitHubClient.GetBranchCommits(this.username, this.repoName, this.branchName, out this.message);
-            //}
+            }
+
+            ICommitService commitService = this.ServiceFactory.CreateCommitServcie();
+            ClientResponse<IEnumerable<Commit>> commitsResponse =
+                commitService.GetBranchCommits(this.username, this.repoName, this.branchName).GetAwaiter().GetResult();
+            this.commits = commitsResponse.ResponseData;
         }
 
         /// <summary>
@@ -91,19 +108,19 @@
         /// </summary>
         public override void ShowResult()
         {
-            //if (this.commits == null)
-            //{
-            //    this.ConslWorker.WriteInConsole(this.message);
-            //}
-            //else
-            //{
-            //    this.ConslWorker.WriteInConsole("commits:");
-            //    foreach (var item in this.commits)
-            //    {
-            //        this.ConslWorker.WriteInConsole(BranchCommitsCommand.COMMITDELIMETER);
-            //        this.ConslWorker.WriteInConsole(item.ToString());
-            //    }
-            //}
+            if (!this.successful)
+            {
+                this.ConslWorker.WriteInConsole(this.outputMessage);
+            }
+            else
+            {
+                this.ConslWorker.WriteInConsole("commits:");
+                foreach (var item in this.commits)
+                {
+                    this.ConslWorker.WriteInConsole(BranchCommitsCommand.COMMITDELIMETER);
+                    this.ConslWorker.WriteInConsole(item.ToString());
+                }
+            }
         }
     }
 }

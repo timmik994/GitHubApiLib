@@ -1,4 +1,6 @@
-﻿namespace GitHubHelper.Commands
+﻿using GitHubClient.Interfaces;
+
+namespace GitHubHelper.Commands
 {
     using System;
     using System.Collections.Generic;
@@ -7,20 +9,26 @@
     using GitHubClient;
 
     /// <summary>
-    /// Realisation of command pattern.
+    /// Implementation of command pattern.
     /// </summary>
     public class CommandFactory
     {
         /// <summary>
-        /// Typec of commands
+        /// Types of commands
         /// </summary>
         private List<Type> commandClasses = new List<Type>();
 
         /// <summary>
+        /// Token from gitHub api.
+        /// </summary>
+        private string accessToken { get; set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandFactory" /> class.
         /// </summary>
-        public CommandFactory()
+        public CommandFactory(string accessToken)
         {
+            this.accessToken = accessToken;
             List<Assembly> assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
             foreach (var assembly in assemblies)
             {
@@ -37,13 +45,12 @@
         /// <returns>Instance of the Command.</returns>
         public AbstractCommand GetCommand(string command)
         {
-            //Type commandType = this.commandClasses.Find(cmdClass => this.IsRightCommand(command, cmdClass));
-            //ConsoleWorker consoleHelper = new ConsoleWorker();
-            //GitHubApiClient gitHubClient = GitHubApiClient.GetInstance();
-            //var constructorArgs = new object[] { consoleHelper, gitHubClient };
-            //AbstractCommand commandInstance = Activator.CreateInstance(commandType, constructorArgs) as AbstractCommand;
-            //return commandInstance;
-            return null;
+            Type commandType = this.commandClasses.Find(cmdClass => this.IsRightCommand(command, cmdClass));
+            ConsoleWorker consoleHelper = new ConsoleWorker();
+            IServiceFactory serviceFactory = new ServiceFactory(this.accessToken);
+            var constructorArgs = new object[] { consoleHelper, serviceFactory };
+            AbstractCommand commandInstance = Activator.CreateInstance(commandType, constructorArgs) as AbstractCommand;
+            return commandInstance;
         }
 
         /// <summary>

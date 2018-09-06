@@ -1,4 +1,4 @@
-﻿namespace GitHubClient
+﻿namespace GitHubClient.DataServices
 {
     using System.Globalization;
     using System.Net.Http;
@@ -9,7 +9,7 @@
     /// <summary>
     /// Service that works with users.
     /// </summary>
-    public class UserService : IUserService
+    public class UserService : AbstractGitHubService, IUserService
     {
         /// <summary>
         /// Owner of access token.
@@ -17,17 +17,11 @@
         private FullUserData currentUser;
 
         /// <summary>
-        /// The request sender to send requests to gitHub API.
-        /// </summary>
-        private IRequestSender requestSender;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="UserService" /> class.
         /// </summary>
         /// <param name="requestSender">The request sender.</param>
-        public UserService(IRequestSender requestSender)
+        public UserService(IRequestSender requestSender) : base(requestSender)
         {
-            this.requestSender = requestSender;
         }
 
         /// <summary>
@@ -36,27 +30,28 @@
         /// <returns>ClientResponse instance with full data of current user.</returns>
         public async Task<ClientResponse<FullUserData>> GetCurrentUser()
         {
+            ClientResponse<FullUserData> clientResponse;
             if (this.currentUser != null)
             {
-                var clientResponse = new ClientResponse<FullUserData>()
+                clientResponse = new ClientResponse<FullUserData>()
                 {
                     Message = MessageConstants.DataAlreadyLoaded,
                     ResponseData = this.currentUser,
                     Status = OperationStatus.Susseess
                 };
-                return clientResponse;
             }
             else
             {
                 HttpResponseMessage httpResponse = 
                     await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl);
-                ClientResponse<FullUserData> clientResponse = 
-                    await this.requestSender.ProcessHttpResponse<FullUserData>(
+                clientResponse = 
+                    await HttpResponceParseHelper.ProcessHttpResponse<FullUserData>(
                         httpResponse, 
                         MessageConstants.ObjectNotFound);
                 this.currentUser = clientResponse.ResponseData;
-                return clientResponse;
             }
+
+            return clientResponse;
         }
 
         /// <summary>
@@ -66,23 +61,29 @@
         /// <returns>ClientResponse instance with full data of current user.</returns>
         public async Task<ClientResponse<FullUserData>> GetFullUserData(string username)
         {
-            if (username == string.Empty)
+            ClientResponse<FullUserData> clientResponse;
+            if (string.IsNullOrEmpty(username))
             {
-                var clientResponse = new ClientResponse<FullUserData>();
-                clientResponse.Message = MessageConstants.EmptyData;
-                clientResponse.Status = OperationStatus.EmptyData;
-                return clientResponse;
+                clientResponse = new ClientResponse<FullUserData>
+                {
+                    Message = MessageConstants.EmptyData,
+                    Status = OperationStatus.EmptyData
+                };
+            }
+            else
+            {
+                var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserDataUrlTemplate, username);
+                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                var notFoundMessage = string.Format(
+                    CultureInfo.InvariantCulture,
+                    MessageConstants.UserNotFoundTemplate,
+                    username);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<FullUserData>(
+                    httpResponse,
+                    notFoundMessage);
             }
 
-            var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserDataUrlTemplate, username);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            var notFoundMessage = string.Format(
-                CultureInfo.InvariantCulture, 
-                MessageConstants.UserNotFoundTemplate,
-                username);
-            return await this.requestSender.ProcessHttpResponse<FullUserData>(
-                httpResponse, 
-                notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>
@@ -92,19 +93,21 @@
         /// <returns>ClientResponse instance with full data of current user.</returns>
         public async Task<ClientResponse<FullUserData>> GetFullUserData(BasicUserData userData)
         {
+            ClientResponse<FullUserData> clientResponse;
             if (userData != null)
             {
-                return await this.GetFullUserData(userData.Login);
+                clientResponse = await this.GetFullUserData(userData.Login);
             }
             else
             {
-                var clientResponse = new ClientResponse<FullUserData>()
+                clientResponse = new ClientResponse<FullUserData>()
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
             }
+
+            return clientResponse;
         }
     }
 }

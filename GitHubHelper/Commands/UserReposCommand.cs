@@ -1,4 +1,6 @@
-﻿namespace GitHubHelper.Commands
+﻿using GitHubClient.Interfaces;
+
+namespace GitHubHelper.Commands
 {
     using System.Collections.Generic;
     using GitHubClient;
@@ -30,7 +32,7 @@
         /// </summary>
         /// <param name="consoleHelper">The ConsoleHelper instance.</param>
         /// <param name="gitHubClient">The GitHubClient instance.</param>
-        public UserReposCommand(ConsoleWorker consoleHelper) : base(consoleHelper)
+        public UserReposCommand(ConsoleWorker consoleHelper, IServiceFactory serviceFactory) : base(consoleHelper, serviceFactory)
         {
         }
 
