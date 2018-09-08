@@ -70,25 +70,27 @@
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                var url = string.Format(
+                    CultureInfo.InvariantCulture,
+                    UrlConstants.BranchCommitsUrlTemplate,
+                    username,
+                    repositoryName,
+                    branchName);
+                HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
+                var notFoundMessage = string.Format(
+                    CultureInfo.InvariantCulture,
+                    MessageConstants.RepoUserBranchNotFoundTemplate,
+                    username,
+                    repositoryName,
+                    branchName);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
+                    httpResponse,
+                    notFoundMessage);
             }
 
-            var url = string.Format(
-                CultureInfo.InvariantCulture, 
-                UrlConstants.BranchCommitsUrlTemplate, 
-                username,
-                repositoryName, 
-                branchName);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            var notFoundMessage = string.Format(
-                CultureInfo.InvariantCulture,
-                MessageConstants.RepoUserBranchNotFoundTemplate, 
-                username, 
-                repositoryName, 
-                branchName);
-            clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
-                httpResponse, 
-                notFoundMessage);
             return clientResponse;
         }
 
@@ -111,7 +113,7 @@
             else
             {
                 HttpResponseMessage httpResponse =
-                    await this.requestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
+                    await this.RequestSender.SendGetRequestToGitHubApiAsync(basicCommitData.Url);
                 clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<Commit>(
                     httpResponse,
                     MessageConstants.ObjectNotFound);
@@ -130,30 +132,34 @@
             string username, 
             string repositoryName)
         {
+            ClientResponse<IEnumerable<Commit>> clientResponse;
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(repositoryName))
             {
-                var clientResponse = new ClientResponse<IEnumerable<Commit>>
+                clientResponse = new ClientResponse<IEnumerable<Commit>>
                 {
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                var url = string.Format(
+                    CultureInfo.InvariantCulture,
+                    UrlConstants.RepositoryCommitsUrlTemplate,
+                    username,
+                    repositoryName);
+                HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
+                string notFoundMessage = string.Format(
+                    CultureInfo.InvariantCulture,
+                    MessageConstants.UserOrRepositoryNotFoundTemplate,
+                    username,
+                    repositoryName);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
+                    httpResponse,
+                    notFoundMessage);
             }
 
-            var url = string.Format(
-                CultureInfo.InvariantCulture, 
-                UrlConstants.RepositoryCommitsUrlTemplate, 
-                username,
-                repositoryName);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            string notFoundMessage = string.Format(
-                CultureInfo.InvariantCulture,
-                MessageConstants.UserOrRepositoryNotFoundTemplate,
-                username,
-                repositoryName);
-            return await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Commit>>(
-                httpResponse, 
-                notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>

@@ -36,23 +36,25 @@
                     Message = MessageConstants.EmptyData,
                     Status = OperationStatus.EmptyData
                 };
-                return clientResponse;
+            }
+            else
+            {
+                var url = string.Format(
+                    CultureInfo.InvariantCulture,
+                    UrlConstants.RepositoryBranchesUrlTemplate,
+                    username,
+                    repositoryName);
+                HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
+                string notFoundMessage = string.Format(
+                    CultureInfo.InvariantCulture,
+                    MessageConstants.UserOrRepositoryNotFoundTemplate,
+                    username,
+                    repositoryName);
+                clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Branch>>(
+                    httpResponse,
+                    notFoundMessage);
             }
 
-            var url = string.Format(
-                CultureInfo.InvariantCulture, 
-                UrlConstants.RepositoryBranchesUrlTemplate, 
-                username,
-                repositoryName);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
-            string notFoundMessage = string.Format(
-                CultureInfo.InvariantCulture,
-                MessageConstants.UserOrRepositoryNotFoundTemplate,
-                username,
-                repositoryName);
-            clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<Branch>>(
-                httpResponse,
-                notFoundMessage);
             return clientResponse;
         }
 

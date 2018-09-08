@@ -43,7 +43,7 @@
             else
             {
                 HttpResponseMessage httpResponse = 
-                    await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl);
+                    await this.RequestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl);
                 clientResponse = 
                     await HttpResponceParseHelper.ProcessHttpResponse<FullUserData>(
                         httpResponse, 
@@ -73,7 +73,7 @@
             else
             {
                 var url = string.Format(CultureInfo.InvariantCulture, UrlConstants.UserDataUrlTemplate, username);
-                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
                 var notFoundMessage = string.Format(
                     CultureInfo.InvariantCulture,
                     MessageConstants.UserNotFoundTemplate,

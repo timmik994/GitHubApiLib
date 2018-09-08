@@ -42,7 +42,7 @@
             {
                 string repositoryJson = JsonConvert.SerializeObject(repositoryData);
                 HttpResponseMessage httpResponse =
-                    await this.requestSender.SendPostRequestToGitHubApiAsync(
+                    await this.RequestSender.SendPostRequestToGitHubApiAsync(
                         UrlConstants.CurrentUserRepositoriesUrl,
                         repositoryJson);
                 clientResponse = await HttpResponceParseHelper.ProcessHttpResponse<string>(
@@ -60,7 +60,7 @@
         public async Task<ClientResponse<IEnumerable<FullRepositoryData>>> GetCurrentUserRepository()
         {
             HttpResponseMessage httpResponse = 
-                await this.requestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl);
+                await this.RequestSender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl);
             ClientResponse<IEnumerable<FullRepositoryData>> clientResponse = 
                 await HttpResponceParseHelper.ProcessHttpResponse<IEnumerable<FullRepositoryData>>(
                 httpResponse,
@@ -80,7 +80,7 @@
                 UrlConstants.RepositoryDataUrlTemplate,
                 repositoryData.Owner.Login, 
                 repositoryData.Name);
-            HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+            HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
             var clientResponse = new ClientResponse<FullRepositoryData>();
             string notFoundMessage = string.Format(
                 CultureInfo.InvariantCulture,
@@ -114,7 +114,7 @@
                     CultureInfo.InvariantCulture, 
                     UrlConstants.UserRepositoriesUrlTemplate, 
                     username);
-                HttpResponseMessage httpResponse = await this.requestSender.SendGetRequestToGitHubApiAsync(url);
+                HttpResponseMessage httpResponse = await this.RequestSender.SendGetRequestToGitHubApiAsync(url);
                 var notFoundMessage = string.Format(
                     CultureInfo.InvariantCulture,
                     MessageConstants.UserNotFoundTemplate,

@@ -39,7 +39,7 @@
             Assert.Equal(testClientResponseFirst.ResponseData, testClientResponseSecond.ResponseData);
             Assert.Equal(MessageConstants.DataAlreadyLoaded, testClientResponseSecond.Message);
             mock.Verify(
-                sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserRepositoriesUrl), 
+                sender => sender.SendGetRequestToGitHubApiAsync(UrlConstants.CurrentUserUrl), 
                     Times.Once);
         }
 
