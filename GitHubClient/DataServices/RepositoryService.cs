@@ -87,9 +87,11 @@
                 MessageConstants.UserOrRepositoryNotFoundTemplate, 
                 repositoryData.Owner.Login, 
                 repositoryData.Name);
-            return await HttpResponceParseHelper.ProcessHttpResponse<FullRepositoryData>(
-                httpResponse, 
+            clientResponse = 
+                await HttpResponceParseHelper.ProcessHttpResponse<FullRepositoryData>(
+                httpResponse,
                 notFoundMessage);
+            return clientResponse;
         }
 
         /// <summary>
